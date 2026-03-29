@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tournament Range Trainer Pro</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
 :root{
@@ -23,51 +22,10 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:radial-gradient(e
 .hdr{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid var(--b1);margin-bottom:16px;flex-wrap:wrap;gap:8px;}
 .logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--gold);}
 .logo span{font-size:10px;color:var(--txt3);letter-spacing:1px;font-family:'DM Sans',sans-serif;margin-left:8px;font-weight:400;}
-.hdr-right{display:flex;align-items:center;gap:16px;}
 .hdr-stats{display:flex;gap:16px;}
 .hs{text-align:right;}
 .hs-v{font-family:'Bebas Neue',monospace;font-size:20px;color:var(--gbr);letter-spacing:1px;}
 .hs-l{font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:1.5px;}
-
-/* AUTH */
-.auth-area{display:flex;align-items:center;gap:8px;}
-.auth-user{font-size:11px;color:var(--txt2);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.auth-btn{padding:4px 12px;border:1px solid var(--b2);border-radius:4px;cursor:pointer;background:var(--s1);color:var(--txt2);font-size:11px;font-weight:500;transition:all .1s;white-space:nowrap;}
-.auth-btn:hover{background:var(--s2);color:var(--txt);}
-.auth-btn.primary{background:var(--gdim);border-color:var(--green);color:var(--gbr);}
-.auth-btn.primary:hover{background:var(--gmed);}
-.sync-indicator{font-size:9px;color:var(--teal);display:flex;align-items:center;gap:4px;}
-.sync-indicator::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--teal);display:inline-block;}
-.sync-indicator.offline::before{background:var(--amber);}
-.sync-indicator.offline{color:var(--amber);}
-
-/* AUTH MODAL */
-.auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:1000;display:none;align-items:center;justify-content:center;}
-.auth-overlay.show{display:flex;}
-.auth-modal{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:32px;width:380px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,.6);}
-.auth-modal h2{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:var(--gold);margin-bottom:4px;}
-.auth-modal p{font-size:13px;color:var(--txt3);margin-bottom:20px;}
-.auth-tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:1px solid var(--b1);}
-.auth-tab{padding:8px 16px;cursor:pointer;font-size:13px;font-weight:500;color:var(--txt3);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s;}
-.auth-tab:hover{color:var(--txt);}
-.auth-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
-.auth-field{margin-bottom:14px;}
-.auth-field label{display:block;font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px;}
-.auth-field input{width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--b2);border-radius:6px;color:var(--txt);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s;}
-.auth-field input:focus{border-color:var(--gold);}
-.auth-submit{width:100%;padding:12px;border:none;border-radius:8px;background:var(--gold);color:#000;font-size:14px;font-weight:600;cursor:pointer;font-family:'Bebas Neue',sans-serif;letter-spacing:2px;transition:all .12s;margin-top:6px;}
-.auth-submit:hover{background:#fbbf24;}
-.auth-submit:disabled{opacity:.4;cursor:not-allowed;}
-.auth-error{background:var(--rdim);border:1px solid var(--red);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--rbr);margin-bottom:12px;display:none;}
-.auth-error.show{display:block;}
-.auth-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--txt3);cursor:pointer;font-size:20px;padding:4px;}
-.auth-close:hover{color:var(--txt);}
-.auth-divider{display:flex;align-items:center;gap:12px;margin:16px 0;font-size:11px;color:var(--txt3);}
-.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--b1);}
-.auth-skip{text-align:center;}
-.auth-skip a{color:var(--txt3);font-size:12px;cursor:pointer;text-decoration:underline;transition:color .1s;}
-.auth-skip a:hover{color:var(--txt2);}
-
 .controls{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;align-items:flex-start;}
 .cg{flex:0 0 auto;}
 .cl{font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px;}
@@ -79,10 +37,12 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:radial-gradient(e
 .ob.ab{background:var(--bdim);border-color:var(--blue);color:#93c5fd;}
 .ob.at{background:var(--tdim);border-color:var(--teal);color:#5eead4;}
 .ob.ap{background:var(--pdim);border-color:var(--purple);color:#c4b5fd;}
+
 .tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid var(--b1);}
 .tab{padding:8px 18px;cursor:pointer;font-size:13px;font-weight:500;color:var(--txt2);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s;user-select:none;}
 .tab:hover{color:var(--txt);}.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
 .panel{display:none;}.panel.active{display:block;}
+/* GRID */
 .gw{display:inline-block;border:1px solid var(--b1);border-radius:6px;overflow:hidden;flex-shrink:0;cursor:crosshair;}
 .gr{display:flex;}
 .gl{width:var(--cs,30px);height:var(--cs,30px);display:flex;align-items:center;justify-content:center;font-size:calc(var(--cs,30px) * 0.33);font-weight:600;color:var(--txt4);background:var(--s1);font-family:'JetBrains Mono',monospace;flex-shrink:0;}
@@ -102,12 +62,14 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:radial-gradient(e
 .cell.fw{background:#3b1a00!important;color:#fb923c!important;border-color:#92400e!important;}
 .cell.hl{background:var(--gold)!important;color:#000!important;border-color:#a16207!important;animation:pulse .5s ease infinite alternate;}
 .cell.hl-no{background:var(--red)!important;color:#fff!important;border-color:#7f1d1d!important;animation:pulse .5s ease infinite alternate;}
+/* MINI GRID */
 .mini-cell{width:11px;height:11px;display:inline-flex;align-items:center;justify-content:center;font-size:5px;border:0.5px solid #07090d;background:#111d2e;color:#1e3050;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
 .mini-cell.on{background:var(--gmed);color:var(--gbr);}
 .mini-cell.shv{background:#7f1212;color:#fecaca;}
 .mini-cell.ain{background:#3b0000;color:#ef4444;}
 .mini-cell.hl{background:var(--gold);color:#000;}
 .mini-cell.hl-no{background:var(--red);color:#fff;}
+/* EXPLORER */
 .exp-wrap{display:flex;gap:0px;align-items:center;flex-wrap:nowrap;width:100%;}
 .info-col{flex:0 0 var(--info-w,340px);width:var(--info-w,340px);transition:width .2s,flex-basis .2s;}
 .rc{background:var(--s1);border:1px solid var(--b1);border-radius:8px;padding:18px;margin-bottom:8px;}
@@ -116,6 +78,7 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:radial-gradient(e
 .rlbl{font-size:15px;color:var(--txt2);}
 .rval{font-family:'Bebas Neue',monospace;font-size:28px;color:var(--gbr);letter-spacing:1px;}
 .rbar{height:5px;background:var(--b1);border-radius:3px;margin:12px 0 10px;}
+
 .action-cards{display:flex;gap:4px;margin-bottom:6px;}
 .ac{flex:1;border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between;min-height:0;}
 .ac-call{background:#0f3d20;border:1px solid var(--green);}
@@ -135,6 +98,7 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:radial-gradient(e
 .ac-combos{font-size:11px;color:inherit;opacity:.6;text-align:right;margin-top:8px;}
 .ac-bar{height:8px;border-radius:4px;display:flex;overflow:hidden;gap:1px;margin-bottom:12px;}
 .ac-bar-seg{height:100%;border-radius:2px;transition:width .3s;}
+
 .rbar-f{height:100%;background:var(--green);border-radius:2px;transition:width .3s;}
 .exp-toolbar{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;align-items:center;}
 .brush-row{display:flex;gap:4px;margin-top:6px;align-items:center;flex-wrap:wrap;}
@@ -145,19 +109,23 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:radial-gradient(e
 .brush-btn.br-raise.active{background:#5a0a0a;border-color:#dc2626;color:#fecaca;}
 .brush-btn.br-allin.active{background:#3b0000;border-color:#7f1d1d;color:#ef4444;}
 .brush-btn.br-erase.active{background:var(--s2);border-color:var(--b3);color:var(--txt);}
+/* BADGES */
 .e-badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;display:none;}
 .e-badge.show{display:inline-block;}
 .badge-mod{background:#2d2000;color:var(--gold);border:1px solid var(--amber);}
 .badge-sav{background:#0c2218;color:var(--gbr);border:1px solid var(--green);}
+/* LEGEND */
 .rleg{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px;align-items:center;}
 .rleg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--txt2);}
 .rleg-dot{width:11px;height:11px;border-radius:2px;flex-shrink:0;}
+/* TIPS */
 .tip{border-radius:6px;padding:16px;font-size:14px;line-height:1.7;}
 .tip-u{background:#1a1400;border:1px solid #2d2200;border-left:3px solid var(--gold);color:#fde68a;}
 .tip-b{background:#080c1e;border:1px solid #0f1e4a;border-left:3px solid var(--blue);color:#bfdbfe;}
 .tip-t{background:var(--tdim);border:1px solid #0f3530;border-left:3px solid var(--teal);color:#99f6e4;}
 .tip-p{background:var(--pdim);border:1px solid #2a1050;border-left:3px solid var(--purple);color:#ddd6fe;}
-.qwrap{max-width:960px;margin:0 auto;}
+/* QUIZ */
+.qwrap{max-width:360px;margin:0 auto;}
 .qbadge{display:inline-flex;align-items:center;gap:6px;padding:3px 12px;border-radius:20px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;}
 .bdg-u{background:#2d1a00;color:var(--abr);border:1px solid var(--amber);}
 .bdg-b{background:var(--bdim);color:#93c5fd;border:1px solid var(--blue);}
@@ -167,7 +135,7 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:radial-gradient(e
 .qhand{font-family:'Bebas Neue',monospace;font-size:88px;line-height:1;letter-spacing:6px;margin-bottom:20px;text-align:center;transition:color .1s;}
 .qhand.s{color:#93c5fd;}.qhand.p{color:var(--gold);}.qhand.o{color:var(--txt);}
 .qbtns{display:flex;gap:10px;justify-content:center;margin-bottom:8px;}
-.qb{flex:1;max-width:200px;padding:15px 10px;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;border:1px solid;transition:all .12s;letter-spacing:.5px;font-family:'Bebas Neue',monospace;}
+.qb{flex:1;max-width:160px;padding:14px 10px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid;transition:all .12s;letter-spacing:.5px;}
 .qb:disabled{opacity:.2;cursor:not-allowed;}
 .qby{background:var(--gdim);border-color:var(--green);color:var(--gbr);}
 .qby:hover:not(:disabled){background:var(--gmed);}
@@ -187,6 +155,7 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:radial-gradient(e
 .diff-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:7px 12px;background:var(--s1);border:1px solid var(--b1);border-radius:6px;font-size:12px;color:var(--txt2);}
 .diff-row label{display:flex;align-items:center;gap:6px;cursor:pointer;}
 input[type=checkbox]{accent-color:var(--gold);}
+/* BUILDER */
 .bwrap{display:flex;gap:24px;flex-wrap:nowrap;align-items:flex-start;width:100%;}
 .btask{background:var(--s1);border:1px solid var(--b1);border-radius:8px;padding:11px 14px;margin-bottom:12px;font-size:13px;color:var(--txt2);line-height:1.5;}
 .bbtns{display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap;}
@@ -202,6 +171,7 @@ input[type=checkbox]{accent-color:var(--gold);}
 .leg{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;font-size:11px;align-items:center;}
 .ld{width:11px;height:11px;border-radius:2px;flex-shrink:0;}
 .li{display:flex;align-items:center;gap:5px;color:var(--txt3);}
+/* STATS */
 .sg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
 @media(max-width:600px){.sg{grid-template-columns:repeat(2,1fr);}}@media(max-width:360px){.sg{grid-template-columns:1fr;}}
 .sc{background:var(--s1);border:1px solid var(--b1);border-radius:8px;padding:12px;}
@@ -218,12 +188,19 @@ input[type=checkbox]{accent-color:var(--gold);}
 .mn{background:var(--rdim);color:var(--rbr);font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px;}
 @keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%{opacity:1}100%{opacity:.65}}
+
+/* ── POKER TABLE QUIZ ──────────────────────────────────────────────────────── */
+.qwrap{max-width:960px;margin:0 auto;}
+.diff-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:7px 12px;background:var(--s1);border:1px solid var(--b1);border-radius:6px;font-size:12px;color:var(--txt2);}
+.diff-row label{display:flex;align-items:center;gap:6px;cursor:pointer;}
 .q-sit-bar{text-align:center;font-size:13px;color:var(--txt2);margin-bottom:10px;line-height:1.6;}
 .q-sit-bar strong{color:var(--txt);}
+/* table */
 .ptable-outer{position:relative;width:100%;padding:72px 54px 72px;box-sizing:border-box;margin-bottom:4px;}
 .ptable-felt{width:100%;aspect-ratio:2.2/1;background:radial-gradient(ellipse at 50% 50%,#1a5a8a 50%,#0d3a5c 100%);border-radius:50%;border:9px solid #1a2a3a;box-shadow:inset 0 0 70px rgba(0,0,0,.5),0 0 0 15px #0a1520;display:flex;align-items:center;justify-content:center;}
 .ptable-center{text-align:center;color:rgba(255,255,255,.45);font-size:9px;letter-spacing:2px;text-transform:uppercase;}
 .ptable-center span{display:block;font-family:'Bebas Neue',monospace;font-size:22px;color:rgba(255,255,255,.7);letter-spacing:3px;margin-top:2px;}
+/* seats */
 .pseat{position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px;transform:translate(-50%,-50%);}
 .pseat-cards{display:flex;gap:4px;}
 .pcard-back{width:30px;height:42px;background:linear-gradient(135deg,#1a3565 30%,#0d2040 100%);border-radius:5px;border:1.5px solid #2a4a8a;box-shadow:1px 2px 4px rgba(0,0,0,.6);}
@@ -250,79 +227,57 @@ input[type=checkbox]{accent-color:var(--gold);}
 .pcard-open::before{content:'';position:absolute;inset:4px;border-radius:4px;border:1px solid rgba(220,80,80,.3);}
 .pcard-open::after{content:'';position:absolute;inset:7px;background:repeating-linear-gradient(45deg,rgba(220,80,80,.07) 0px,rgba(220,80,80,.07) 2px,transparent 2px,transparent 8px);border-radius:2px;}
 .pdealerbtn{position:absolute;width:22px;height:22px;background:#e2c97e;border-radius:50%;font-size:10px;font-weight:700;color:#1a1a1a;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%);box-shadow:0 1px 4px rgba(0,0,0,.5);}
+/* action buttons */
 .q-action-row{display:flex;gap:12px;justify-content:center;margin-bottom:8px;}
+.qb{flex:1;max-width:200px;padding:15px 10px;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;border:1px solid;transition:all .12s;letter-spacing:.5px;font-family:'Bebas Neue',monospace;}
+.qb:disabled{opacity:.2;cursor:not-allowed;}
+.qby{background:var(--gdim);border-color:var(--green);color:var(--gbr);}
+.qby:hover:not(:disabled){background:var(--gmed);}
+.qbn{background:var(--rdim);border-color:var(--red);color:var(--rbr);}
+.qbn:hover:not(:disabled){background:#500c0c;}
+.kbd-h{text-align:center;font-size:10px;color:var(--txt3);margin-bottom:12px;}
+.kbd-h kbd{padding:1px 5px;background:var(--s2);border:1px solid var(--b2);border-radius:3px;font-family:monospace;font-size:10px;}
+.fb{border-radius:8px;padding:12px 14px;font-size:12px;line-height:1.7;display:none;animation:fi .18s ease;}
+.fb.show{display:block;}
+.fb.ok{background:#0a1f10;border:1px solid #166534;color:#86efac;}
+.fb.bad{background:#1c0808;border:1px solid #7f1d1d;color:#fca5a5;}
+.mini-grid-wrap{margin-top:10px;display:flex;flex-direction:column;align-items:flex-start;}
+.mini-row{display:flex;}
+.nxt-row{display:flex;justify-content:center;margin-top:12px;}
+.nxt{padding:7px 22px;background:transparent;border:1px solid var(--b2);border-radius:6px;color:var(--txt2);cursor:pointer;font-size:13px;font-weight:500;transition:all .1s;}
+.nxt:hover{background:var(--s2);color:var(--txt);}
 </style>
 </head>
 <body>
-
-<!-- AUTH MODAL -->
-<div class="auth-overlay" id="auth-overlay">
-  <div class="auth-modal" style="position:relative;">
-    <button class="auth-close" id="auth-close">&times;</button>
-    <h2>RANGE TRAINER</h2>
-    <p>Inicia sesión para guardar tus rangos y estadísticas en la nube</p>
-    <div class="auth-error" id="auth-error"></div>
-    <div class="auth-tabs">
-      <div class="auth-tab active" data-atab="login">Iniciar sesión</div>
-      <div class="auth-tab" data-atab="register">Registrarse</div>
-    </div>
-    <div id="auth-form-login">
-      <div class="auth-field">
-        <label>Email</label>
-        <input type="email" id="login-email" placeholder="tu@email.com" autocomplete="email">
-      </div>
-      <div class="auth-field">
-        <label>Contraseña</label>
-        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
-      </div>
-      <button class="auth-submit" id="login-btn">ENTRAR</button>
-    </div>
-    <div id="auth-form-register" style="display:none">
-      <div class="auth-field">
-        <label>Email</label>
-        <input type="email" id="reg-email" placeholder="tu@email.com" autocomplete="email">
-      </div>
-      <div class="auth-field">
-        <label>Contraseña</label>
-        <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
-      </div>
-      <button class="auth-submit" id="reg-btn">CREAR CUENTA</button>
-    </div>
-    <div class="auth-divider">o</div>
-    <div class="auth-skip"><a id="auth-skip-link">Continuar sin cuenta (solo localStorage)</a></div>
-  </div>
-</div>
-
 <div class="app">
+
 <div class="hdr">
   <div class="logo">RANGE TRAINER <span>MTT / SNG PRO</span></div>
-  <div class="hdr-right">
-    <div class="auth-area" id="auth-area">
-      <span class="sync-indicator offline" id="sync-ind">Local</span>
-      <button class="auth-btn primary" id="hdr-login-btn">Iniciar sesión</button>
-    </div>
-    <div class="hdr-stats">
-      <div class="hs"><div class="hs-v" id="h-acc">–</div><div class="hs-l">Precisión</div></div>
-      <div class="hs"><div class="hs-v" id="h-str">0</div><div class="hs-l">Racha</div></div>
-      <div class="hs"><div class="hs-v" id="h-tot">0</div><div class="hs-l">Manos</div></div>
-    </div>
+  <div class="hdr-stats">
+    <div class="hs"><div class="hs-v" id="h-acc">–</div><div class="hs-l">Precisión</div></div>
+    <div class="hs"><div class="hs-v" id="h-str">0</div><div class="hs-l">Racha</div></div>
+    <div class="hs"><div class="hs-v" id="h-tot">0</div><div class="hs-l">Manos</div></div>
   </div>
 </div>
+
 <div class="controls">
   <div class="cg"><div class="cl">Situación</div><div class="copts" id="sit-opts">
     <button class="ob ab" data-sit="open">Open Raise</button>
     <button class="ob" data-sit="3bet">3-Bet</button>
     <button class="ob" data-sit="any">★ Any</button>
+
   </div></div>
   <div class="cg"><div class="cl">Stack (BB)</div><div class="copts" id="stack-opts"></div></div>
   <div class="cg"><div class="cl">Posición</div><div class="copts" id="pos-opts"></div></div>
 </div>
+
 <div class="tabs">
   <div class="tab active" data-tab="explorer">Explorar</div>
   <div class="tab" data-tab="quiz">Quiz</div>
   <div class="tab" data-tab="builder">Construir</div>
   <div class="tab" data-tab="stats">Stats</div>
 </div>
+
 <div id="p-explorer" class="panel active">
   <div class="exp-wrap">
     <div id="eg-wrap" style="flex:0 0 auto;">
@@ -384,6 +339,7 @@ input[type=checkbox]{accent-color:var(--gold);}
     </div>
   </div>
 </div>
+
 <div id="p-quiz" class="panel">
   <div class="qwrap">
     <div class="diff-row">
@@ -394,21 +350,23 @@ input[type=checkbox]{accent-color:var(--gold);}
       <div class="ptable-felt" id="q-felt">
         <div class="ptable-center">Stack<span id="q-stack-lbl">–</span></div>
       </div>
-    </div>
+      </div>
     <div class="q-sit-bar" id="q-ctx" style="margin-bottom:10px;">–</div>
     <div class="q-action-row">
-      <button class="qb" id="q-btn-allin" style="background:#220000;border-color:#7f1d1d;color:#ef4444;">ALL-IN</button>
-      <button class="qb" id="q-btn-raise" style="background:#5a0a0a;border-color:#dc2626;color:#fecaca;">RAISE</button>
-      <button class="qb" id="q-btn-call" style="background:var(--gdim);border-color:var(--green);color:var(--gbr);">CALL</button>
-      <button class="qb" id="q-btn-fold" style="background:var(--s2);border-color:var(--b3);color:var(--txt2);">FOLD</button>
+      <button class="qb" id="q-btn-allin"  style="background:#220000;border-color:#7f1d1d;color:#ef4444;">ALL-IN</button>
+      <button class="qb" id="q-btn-raise"  style="background:#5a0a0a;border-color:#dc2626;color:#fecaca;">RAISE</button>
+      <button class="qb" id="q-btn-call"   style="background:var(--gdim);border-color:var(--green);color:var(--gbr);">CALL</button>
+      <button class="qb" id="q-btn-fold"   style="background:var(--s2);border-color:var(--b3);color:var(--txt2);">FOLD</button>
     </div>
     <div style="display:flex;justify-content:center;margin-top:10px;">
       <button id="q-nxt" style="padding:10px 40px;background:var(--bdim);border:1px solid var(--blue);border-radius:8px;color:#93c5fd;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.5px;font-family:'Bebas Neue',monospace;transition:all .12s;" onmouseover="this.style.background='#1a3a6a'" onmouseout="this.style.background='var(--bdim)'">SIGUIENTE →</button>
     </div>
     <div class="kbd-h"><kbd>1</kbd> All-in &ensp; <kbd>2</kbd> Raise &ensp; <kbd>3</kbd> Call &ensp; <kbd>4</kbd> Fold &ensp; <kbd>Enter</kbd>/<kbd>→</kbd> Siguiente</div>
     <div class="fb" id="q-fb"></div>
+
   </div>
 </div>
+
 <div id="p-builder" class="panel">
   <div class="bbtns">
     <button class="btn b-u" id="b-new">Nueva pregunta</button>
@@ -439,6 +397,7 @@ input[type=checkbox]{accent-color:var(--gold);}
     </div>
   </div>
 </div>
+
 <div id="p-stats" class="panel">
   <div class="sg">
     <div class="sc"><div class="scl">Precisión sesión</div><div class="scv g" id="st-acc">–</div></div>
@@ -452,259 +411,63 @@ input[type=checkbox]{accent-color:var(--gold);}
   <div id="st-mistakes"></div>
   <div style="margin-top:14px"><button class="btn b-s" id="st-rst">Reiniciar sesión</button></div>
 </div>
+
 </div>
-<script>
-// ═══════════════════════════════════════════════════════════════════════════════
-// SUPABASE INTEGRATION
-// ═══════════════════════════════════════════════════════════════════════════════
-const SUPABASE_URL = 'https://grdmhcdgaqbfpnimcrxr.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_fsMayEY8ayyb197VDgwBDQ_PHhTZQnT';
-let supabase = null;
-let currentUser = null;
 
-try {
-  supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
-} catch(e) {
-  console.warn('Supabase init failed, using localStorage fallback', e);
-}
+<script type="module">
+// 1. Conexión con Supabase
+import { createClient } from 'https://esm.sh/@supabase/supabase-js'
 
-// Auth UI
-function updateAuthUI() {
-  const area = document.getElementById('auth-area');
-  const ind = document.getElementById('sync-ind');
-  const btn = document.getElementById('hdr-login-btn');
-  if (currentUser) {
-    const email = currentUser.email || 'Usuario';
-    area.innerHTML = `
-      <span class="sync-indicator" id="sync-ind">Cloud sync</span>
-      <span class="auth-user">${email}</span>
-      <button class="auth-btn" id="hdr-logout-btn">Salir</button>
+const SUPABASE_URL = 'https://grdmhcdgaqbfpnimcrxr.supabase.co'
+const SUPABASE_KEY = 'sb_publishable_fsMayEY8ayyb197VDgwBDQ_PHhTZQnT' 
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+// 2. Crear la interfaz de Login
+async function setupAuth() {
+  // Comprobamos si el usuario ya está logueado
+  const { data: { session } } = await supabase.auth.getSession()
+  
+  // Buscamos la cabecera para poner el botón
+  const hdrStats = document.querySelector('.hdr-stats');
+  const authDiv = document.createElement('div');
+  authDiv.style.display = 'flex';
+  authDiv.style.alignItems = 'center';
+  authDiv.style.marginLeft = '16px';
+  authDiv.style.paddingLeft = '16px';
+  authDiv.style.borderLeft = '1px solid var(--b1)';
+  hdrStats.appendChild(authDiv);
+
+  if (session) {
+    // SI ESTÁ LOGUEADO: Mostramos su email y el botón de Salir
+    const userEmail = session.user.email;
+    authDiv.innerHTML = `
+      <span style="font-size:11px; color:var(--gold); margin-right:10px; font-weight:600;">${userEmail}</span>
+      <button class="ob" id="btn-logout" style="border-color:var(--red); color:var(--rbr);">Salir</button>
     `;
-    document.getElementById('hdr-logout-btn').addEventListener('click', doLogout);
+    document.getElementById('btn-logout').onclick = async () => {
+      await supabase.auth.signOut();
+      window.location.reload(); // Recarga la página al salir
+    };
   } else {
-    area.innerHTML = `
-      <span class="sync-indicator offline" id="sync-ind">Local</span>
-      <button class="auth-btn primary" id="hdr-login-btn">Iniciar sesión</button>
+    // SI NO ESTÁ LOGUEADO: Mostramos el botón de Google
+    authDiv.innerHTML = `
+      <button class="ob au" id="btn-google" style="display:flex; align-items:center; gap:6px;">
+        <svg style="width:14px;height:14px;" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Entrar con Google
+      </button>
     `;
-    document.getElementById('hdr-login-btn').addEventListener('click', () => {
-      document.getElementById('auth-overlay').classList.add('show');
-    });
-  }
-}
-
-async function doLogin(email, pass) {
-  if (!supabase) throw new Error('Supabase no disponible');
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
-  if (error) throw error;
-  currentUser = data.user;
-  updateAuthUI();
-  await loadFromCloud();
-  refresh();
-}
-
-async function doRegister(email, pass) {
-  if (!supabase) throw new Error('Supabase no disponible');
-  const { data, error } = await supabase.auth.signUp({ email, password: pass });
-  if (error) throw error;
-  if (data.user) {
-    currentUser = data.user;
-    updateAuthUI();
-    // Upload existing localStorage data to cloud
-    await syncLocalToCloud();
-    refresh();
-  }
-}
-
-async function doLogout() {
-  if (supabase) await supabase.auth.signOut();
-  currentUser = null;
-  updateAuthUI();
-}
-
-// Cloud persistence
-async function loadFromCloud() {
-  if (!supabase || !currentUser) return;
-  try {
-    const { data, error } = await supabase
-      .from('custom_ranges')
-      .select('range_key, call_range, raise_range, allin_range')
-      .eq('user_id', currentUser.id);
-    if (error) throw error;
-    if (data) {
-      data.forEach(row => {
-        const cl = new Set(row.call_range || []);
-        const ra = new Set(row.raise_range || []);
-        const ai = new Set(row.allin_range || []);
-        customRanges[row.range_key] = {
-          range: new Set([...cl, ...ra, ...ai]),
-          callRange: cl, raiseRange2: ra, allinRange: ai, saved: true
-        };
+    document.getElementById('btn-google').onclick = async () => {
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin }
       });
-    }
-    // Load stats
-    const { data: stats } = await supabase
-      .from('user_stats')
-      .select('*')
-      .eq('user_id', currentUser.id)
-      .single();
-    if (stats) {
-      session.cor = stats.total_correct || 0;
-      session.tot = stats.total_answered || 0;
-      session.best = stats.best_streak || 0;
-      session.mistakes = stats.mistakes || {};
-      session.sitAcc = stats.sit_acc || { open: { c: 0, t: 0 }, '3bet': { c: 0, t: 0 } };
-      session.weights = stats.weights || {};
-      updateHdrStats();
-    }
-  } catch (e) {
-    console.warn('Cloud load failed:', e);
+    };
   }
 }
 
-async function saveRangeToCloud(key) {
-  if (!supabase || !currentUser) return;
-  const c = customRanges[key];
-  if (!c) return;
-  try {
-    await supabase.from('custom_ranges').upsert({
-      user_id: currentUser.id,
-      range_key: key,
-      call_range: [...(c.callRange || [])],
-      raise_range: [...(c.raiseRange2 || [])],
-      allin_range: [...(c.allinRange || [])]
-    }, { onConflict: 'user_id,range_key' });
-  } catch (e) {
-    console.warn('Cloud save range failed:', e);
-  }
-}
+setupAuth();
 
-async function deleteRangeFromCloud(key) {
-  if (!supabase || !currentUser) return;
-  try {
-    await supabase.from('custom_ranges')
-      .delete()
-      .eq('user_id', currentUser.id)
-      .eq('range_key', key);
-  } catch (e) {
-    console.warn('Cloud delete failed:', e);
-  }
-}
-
-let _statsDebounce = null;
-async function saveStatsToCloud() {
-  if (!supabase || !currentUser) return;
-  clearTimeout(_statsDebounce);
-  _statsDebounce = setTimeout(async () => {
-    try {
-      await supabase.from('user_stats').upsert({
-        user_id: currentUser.id,
-        total_correct: session.cor,
-        total_answered: session.tot,
-        best_streak: session.best,
-        mistakes: session.mistakes,
-        sit_acc: session.sitAcc,
-        weights: session.weights
-      }, { onConflict: 'user_id' });
-    } catch (e) {
-      console.warn('Cloud stats save failed:', e);
-    }
-  }, 2000); // debounce 2s
-}
-
-async function syncLocalToCloud() {
-  if (!supabase || !currentUser) return;
-  const keys = Object.keys(customRanges);
-  for (const k of keys) {
-    if (customRanges[k].saved) await saveRangeToCloud(k);
-  }
-}
-
-// Auth modal logic
-document.querySelectorAll('.auth-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    const isLogin = tab.dataset.atab === 'login';
-    document.getElementById('auth-form-login').style.display = isLogin ? 'block' : 'none';
-    document.getElementById('auth-form-register').style.display = isLogin ? 'none' : 'block';
-    document.getElementById('auth-error').classList.remove('show');
-  });
-});
-
-document.getElementById('auth-close').addEventListener('click', () => {
-  document.getElementById('auth-overlay').classList.remove('show');
-});
-document.getElementById('auth-skip-link').addEventListener('click', () => {
-  document.getElementById('auth-overlay').classList.remove('show');
-});
-document.getElementById('hdr-login-btn').addEventListener('click', () => {
-  document.getElementById('auth-overlay').classList.add('show');
-});
-
-document.getElementById('login-btn').addEventListener('click', async () => {
-  const email = document.getElementById('login-email').value.trim();
-  const pass = document.getElementById('login-pass').value;
-  const errEl = document.getElementById('auth-error');
-  if (!email || !pass) { errEl.textContent = 'Completa todos los campos'; errEl.classList.add('show'); return; }
-  const btn = document.getElementById('login-btn');
-  btn.disabled = true; btn.textContent = 'ENTRANDO...';
-  try {
-    await doLogin(email, pass);
-    document.getElementById('auth-overlay').classList.remove('show');
-    errEl.classList.remove('show');
-  } catch (e) {
-    errEl.textContent = e.message || 'Error al iniciar sesión';
-    errEl.classList.add('show');
-  }
-  btn.disabled = false; btn.textContent = 'ENTRAR';
-});
-
-document.getElementById('reg-btn').addEventListener('click', async () => {
-  const email = document.getElementById('reg-email').value.trim();
-  const pass = document.getElementById('reg-pass').value;
-  const errEl = document.getElementById('auth-error');
-  if (!email || !pass) { errEl.textContent = 'Completa todos los campos'; errEl.classList.add('show'); return; }
-  if (pass.length < 6) { errEl.textContent = 'La contraseña debe tener al menos 6 caracteres'; errEl.classList.add('show'); return; }
-  const btn = document.getElementById('reg-btn');
-  btn.disabled = true; btn.textContent = 'CREANDO...';
-  try {
-    await doRegister(email, pass);
-    document.getElementById('auth-overlay').classList.remove('show');
-    errEl.classList.remove('show');
-  } catch (e) {
-    errEl.textContent = e.message || 'Error al registrarse';
-    errEl.classList.add('show');
-  }
-  btn.disabled = false; btn.textContent = 'CREAR CUENTA';
-});
-
-// Allow Enter key in auth forms
-['login-email','login-pass'].forEach(id=>{
-  document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('login-btn').click();});
-});
-['reg-email','reg-pass'].forEach(id=>{
-  document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('reg-btn').click();});
-});
-
-// Check existing session on load
-async function checkSession() {
-  if (!supabase) return;
-  try {
-    const { data: { session: sess } } = await supabase.auth.getSession();
-    if (sess?.user) {
-      currentUser = sess.user;
-      updateAuthUI();
-      await loadFromCloud();
-      refresh();
-    }
-  } catch (e) {
-    console.warn('Session check failed:', e);
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// ORIGINAL GAME LOGIC (unchanged)
-// ═══════════════════════════════════════════════════════════════════════════════
+// ─── HAND UTILS ───────────────────────────────────────────────────────────────
 const R=['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
 const ALL_HANDS=[];
 for(let i=0;i<13;i++) for(let j=0;j<13;j++) ALL_HANDS.push(hnd(i,j));
@@ -714,7 +477,9 @@ function mk(str){return new Set(str.trim().split(/\s+/).filter(Boolean));}
 function isSuited(x){return x.endsWith('s');}
 function isPair(x){return x.length===2;}
 function handColor(x){return isPair(x)?'p':isSuited(x)?'s':'o';}
+
 // ─── RANGE DATA ───────────────────────────────────────────────────────────────
+// PUSH/FOLD
 const PF={};
 PF['5']={UTG:mk('AA KK QQ JJ TT 99 88 77 66 55 44 33 22 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs K9s K8s K7s K6s K5s QJs QTs Q9s Q8s JTs J9s J8s T9s T8s 98s 97s 87s 76s 65s 54s AKo AQo AJo ATo A9o A8o A7o A6o A5o A4o A3o KQo KJo KTo K9o K8o QJo QTo Q9o JTo J9o T9o T8o 98o 87o 76o'),MP:null,CO:null,BTN:null,SB:null};
 PF['5'].MP=new Set([...PF['5'].UTG,...mk('K4s K3s Q7s J7s T7s 96s 85s 74s 63s 53s A2o K7o Q8o J8o T8o 97o 86o 75o 65o 64o 54o')]);
@@ -746,7 +511,15 @@ PF['20'].MP=new Set([...PF['20'].UTG,...mk('66 55 K9s Q9s J9s T8s 97s 76s 65s A9
 PF['20'].CO=new Set([...PF['20'].MP,...mk('44 33 22 K8s K7s Q8s J8s T7s 86s 75s 54s A7o A6o K9o Q9o J9o 87o 76o')]);
 PF['20'].BTN=new Set([...PF['20'].CO,...mk('K6s K5s K4s Q7s Q6s J7s J6s T6s T5s 96s 85s 74s 63s A5o A4o A3o A2o K8o K7o Q8o J8o T8o 97o 86o 75o 65o')]);
 PF['20'].SB=new Set([...PF['20'].BTN,...mk('K3s K2s Q5s Q4s J5s T5s 95s 84s 73s K6o K5o Q7o Q6o J7o T7o 96o 85o 74o 64o 54o')]);
+
+// OPENING – raise/fold (25BB+) y raise+shove (15/20BB)
+// OP_RAISE = manos que abres a 2.5x (fold a 3-bet o call si son premium)
+// OP_SHOVE = manos que abres directamente all-in para negar fold equity al 3-bettor
+// Para 15/20BB: AMBAS se cuentan como "en rango" en el quiz.
+// Para 25BB+: solo OP_RAISE, sin open-shove.
 const OP_RAISE={}, OP_SHOVE={};
+
+// ── 12BB (mixed) ─────────────────────────────────────────────────────────────
 OP_RAISE['12']={UTG:mk('66 55 44 33 22 A9s A8s A7s A6s A5s A4s A3s A2s KJs KTs K9s QJs QTs JTs T9s 98s 87s 76s A9o A8o KJo KTo QJo QTo JTo'),MP:null,CO:null,BTN:null,SB:null};
 OP_RAISE['12'].MP=new Set([...OP_RAISE['12'].UTG,...mk('K8s Q9s J9s T8s 97s 86s 65s 54s Q9o T9o 98o')]);
 OP_RAISE['12'].CO=new Set([...OP_RAISE['12'].MP,...mk('K7s K6s K5s Q8s J8s T7s 96s 85s 74s 63s A7o A6o A5o A4o K9o J9o 76o 65o')]);
@@ -757,6 +530,8 @@ OP_SHOVE['12'].MP=new Set([...OP_SHOVE['12'].UTG,...mk('A5s A4s A3s A2s K9s Q9s 
 OP_SHOVE['12'].CO=new Set([...OP_SHOVE['12'].MP,...mk('66 55 A8s A7s A6s K8s QTs JTs T8s 87s 76s A6o A5o KTo QJo QTo T9o')]);
 OP_SHOVE['12'].BTN=new Set([...OP_SHOVE['12'].CO,...mk('44 33 22 K7s K6s K5s Q8s J8s T7s 97s 86s 65s 54s A4o A3o A2o K9o Q9o J9o JTo 98o 87o 76o')]);
 OP_SHOVE['12'].SB=new Set([...OP_SHOVE['12'].CO,...mk('44 33 22 K5s K4s K3s Q6s Q5s J7s J6s T6s 96s 85s A4o A3o A2o KTo K9o Q9o J9o T9o JTo 98o')]);
+
+// ── 14BB (mixed) ─────────────────────────────────────────────────────────────
 OP_RAISE['14']={UTG:mk('77 66 55 A9s A8s A7s A6s A5s A4s A3s A2s KJs KTs K9s QJs QTs JTs T9s 98s 87s 76s A9o A8o KJo KTo QJo QTo JTo'),MP:null,CO:null,BTN:null,SB:null};
 OP_RAISE['14'].MP=new Set([...OP_RAISE['14'].UTG,...mk('44 33 22 K8s Q9s J9s T8s 97s 86s 65s 54s Q9o T9o 98o')]);
 OP_RAISE['14'].CO=new Set([...OP_RAISE['14'].MP,...mk('K7s K6s K5s Q8s J8s T7s 96s 85s 74s 63s A7o A6o A5o A4o K9o J9o 76o 65o')]);
@@ -767,6 +542,8 @@ OP_SHOVE['14'].MP=new Set([...OP_SHOVE['14'].UTG,...mk('77 A5s A4s A3s A2s K9s Q
 OP_SHOVE['14'].CO=new Set([...OP_SHOVE['14'].MP,...mk('66 55 A8s A7s A6s K8s QTs JTs T8s 87s 76s A6o A5o KTo QJo QTo T9o')]);
 OP_SHOVE['14'].BTN=new Set([...OP_SHOVE['14'].CO,...mk('44 33 22 K7s K6s K5s Q8s J8s T7s 97s 86s 65s 54s A4o A3o A2o K9o Q9o J9o JTo 98o 87o 76o')]);
 OP_SHOVE['14'].SB=new Set([...OP_SHOVE['14'].CO,...mk('44 33 22 K5s K4s K3s Q6s Q5s J7s J6s T6s 96s 85s A4o A3o A2o KTo K9o Q9o J9o T9o JTo 98o')]);
+
+// ── 17BB (mixed) ─────────────────────────────────────────────────────────────
 OP_RAISE['17']={UTG:mk('88 77 66 A9s A8s A7s A6s A5s A4s A3s A2s KJs KTs K9s QJs JTs T9s 98s 87s 76s A9o A8o KJo KTo QJo QTo JTo'),MP:null,CO:null,BTN:null,SB:null};
 OP_RAISE['17'].MP=new Set([...OP_RAISE['17'].UTG,...mk('55 44 33 22 K8s Q9s J9s T8s 97s 86s 65s 54s A8o A7o Q9o T9o 98o')]);
 OP_RAISE['17'].CO=new Set([...OP_RAISE['17'].MP,...mk('K7s K6s Q8s J8s T7s 96s 85s 75s 74s A7o A6o K9o J9o 87o 76o 65o')]);
@@ -777,26 +554,48 @@ OP_SHOVE['17'].MP=new Set([...OP_SHOVE['17'].UTG,...mk('88 77 A5s A4s A3s A2s K9
 OP_SHOVE['17'].CO=new Set([...OP_SHOVE['17'].MP,...mk('66 55 A8s A7s A6s K8s QTs JTs T8s 87s 76s A6o A5o KTo QJo QTo T9o')]);
 OP_SHOVE['17'].BTN=new Set([...OP_SHOVE['17'].CO,...mk('44 33 22 K7s K6s K5s Q8s J8s T7s 97s 86s 65s 54s A4o A3o A2o K9o Q9o J9o JTo 98o 87o 76o')]);
 OP_SHOVE['17'].SB=new Set([...OP_SHOVE['17'].CO,...mk('44 33 22 K5s K4s K3s Q6s Q5s J7s J6s T6s 96s 85s A4o A3o A2o KTo K9o Q9o J9o T9o JTo 98o')]);
-OP_RAISE['15']={UTG:mk('77 66 55 A9s A8s A7s A6s A5s A4s A3s A2s KJs KTs K9s QJs QTs JTs T9s 98s 87s 76s 65s A9o A8o KJo KTo QJo QTo JTo'),MP:null,CO:null,BTN:null,SB:null};
+
+// 15BB raise range (hands too speculative to open-shove; you raise/fold or raise/call)
+OP_RAISE['15']={
+  UTG:mk('77 66 55 A9s A8s A7s A6s A5s A4s A3s A2s KJs KTs K9s QJs QTs JTs T9s 98s 87s 76s 65s A9o A8o KJo KTo QJo QTo JTo'),
+  MP:null,CO:null,BTN:null,SB:null
+};
 OP_RAISE['15'].MP=new Set([...OP_RAISE['15'].UTG,...mk('44 33 22 K8s Q9s J9s T8s 97s 86s 54s Q9o T9o 98o')]);
 OP_RAISE['15'].CO=new Set([...OP_RAISE['15'].MP,...mk('K7s K6s K5s Q8s J8s T7s 96s 85s 74s 63s A7o A6o A5o A4o K9o J9o 76o 65o')]);
 OP_RAISE['15'].BTN=new Set([...OP_RAISE['15'].CO,...mk('K4s K3s K2s Q7s Q6s Q5s J7s J6s T6s T5s 95s 84s 73s 53s A3o A2o K8o K7o Q8o J8o T8o 97o 86o 75o 64o 54o')]);
 OP_RAISE['15'].SB=new Set([...OP_RAISE['15'].CO,...mk('K3s K2s Q5s Q4s J5s T5s 95s 84s A5o A4o A3o A2o K7o K6o Q7o J7o T7o 86o 75o 64o')]);
-OP_SHOVE['15']={UTG:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs KQs KJs AKo AQo AJo ATo KQo'),MP:null,CO:null,BTN:null,SB:null};
+
+// 15BB open-shove range (hands strong enough to just go all-in directly)
+OP_SHOVE['15']={
+  UTG:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs KQs KJs AKo AQo AJo ATo KQo'),
+  MP:null,CO:null,BTN:null,SB:null
+};
 OP_SHOVE['15'].MP=new Set([...OP_SHOVE['15'].UTG,...mk('A5s A4s A3s A2s K9s Q9s J9s T9s 98s A9o A8o A7o KJo')]);
 OP_SHOVE['15'].CO=new Set([...OP_SHOVE['15'].MP,...mk('77 66 55 A8s A7s A6s K8s QTs JTs T8s 87s 76s A6o A5o KTo QJo QTo T9o')]);
 OP_SHOVE['15'].BTN=new Set([...OP_SHOVE['15'].CO,...mk('44 33 22 K7s K6s K5s Q8s J8s T7s 97s 86s 65s 54s A4o A3o A2o K9o Q9o J9o JTo 98o 87o 76o')]);
 OP_SHOVE['15'].SB=new Set([...OP_SHOVE['15'].CO,...mk('44 33 22 K5s K4s K3s Q6s Q5s J7s J6s T6s 96s 85s A4o A3o A2o KTo K9o Q9o J9o T9o JTo 98o')]);
-OP_RAISE['20']={UTG:mk('88 77 66 A9s A8s A7s A6s A5s A4s A3s A2s KJs KTs K9s QJs JTs T9s 98s 87s 76s A9o A8o KJo KTo QJo QTo JTo'),MP:null,CO:null,BTN:null,SB:null};
+
+// 20BB raise range
+OP_RAISE['20']={
+  UTG:mk('88 77 66 A9s A8s A7s A6s A5s A4s A3s A2s KJs KTs K9s QJs JTs T9s 98s 87s 76s A9o A8o KJo KTo QJo QTo JTo'),
+  MP:null,CO:null,BTN:null,SB:null
+};
 OP_RAISE['20'].MP=new Set([...OP_RAISE['20'].UTG,...mk('55 44 33 22 K8s Q9s J9s T8s 97s 86s 65s 54s A8o A7o Q9o T9o 98o')]);
 OP_RAISE['20'].CO=new Set([...OP_RAISE['20'].MP,...mk('K7s K6s Q8s J8s T7s 96s 85s 75s 74s A7o A6o K9o J9o 87o 76o 65o')]);
 OP_RAISE['20'].BTN=new Set([...OP_RAISE['20'].CO,...mk('K5s K4s K3s Q7s Q6s J7s J6s T6s T5s 95s 84s 73s 63s 53s A6o A5o A4o A3o A2o K8o K7o Q8o J8o T8o 97o 86o 75o 64o 54o')]);
 OP_RAISE['20'].SB=new Set([...OP_RAISE['20'].CO,...mk('K3s K2s Q5s Q4s J5s T5s 95s 84s A5o A4o A3o A2o K7o K6o Q7o J7o T7o 86o 75o 64o')]);
-OP_SHOVE['20']={UTG:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs KQs AKo AQo AJo ATo KQo'),MP:null,CO:null,BTN:null,SB:null};
+
+// 20BB open-shove range
+OP_SHOVE['20']={
+  UTG:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs KQs AKo AQo AJo ATo KQo'),
+  MP:null,CO:null,BTN:null,SB:null
+};
 OP_SHOVE['20'].MP=new Set([...OP_SHOVE['20'].UTG,...mk('88 77 A5s A4s A3s A2s K9s QJs JTs T9s A9o A8o KJo')]);
 OP_SHOVE['20'].CO=new Set([...OP_SHOVE['20'].MP,...mk('66 55 A8s A7s A6s K8s Q9s J9s T8s 98s 87s A7o A6o KTo QJo QTo')]);
 OP_SHOVE['20'].BTN=new Set([...OP_SHOVE['20'].CO,...mk('44 33 22 K7s K6s K5s Q8s J8s T7s 97s 86s 76s 65s A5o A4o A3o A2o K9o Q9o J9o T9o 98o 87o 76o JTo')]);
 OP_SHOVE['20'].SB=new Set([...OP_SHOVE['20'].CO,...mk('44 33 22 K4s K3s Q6s Q5s J7s T6s 96s 85s A4o A3o A2o KTo K9o Q9o J9o T9o 98o JTo')]);
+
+// OPENING (pure raise/fold, 25BB+) – stored in OP
 const OP={};
 OP['25']={UTG:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A5s A4s A3s A2s KQs KJs KTs QJs JTs T9s 98s 87s 76s AKo AQo AJo ATo KQo KJo'),MP:null,CO:null,BTN:null,SB:null};
 OP['25'].MP=new Set([...OP['25'].UTG,...mk('66 55 A8s A7s A6s K9s Q9s J9s T8s 97s 65s 54s A9o A8o KTo QJo QTo JTo T9o 98o')]);
@@ -828,59 +627,342 @@ OP['100'].MP=new Set([...OP['100'].UTG,...mk('77 66 A9s A8s A7s A6s K9s Q9s J9s 
 OP['100'].CO=new Set([...OP['100'].MP,...mk('55 44 33 22 K8s K7s Q8s J8s T7s 86s 75s 54s A8o A7o K9o Q9o J9o T9o 98o')]);
 OP['100'].BTN=new Set([...OP['100'].CO,...mk('K6s K5s K4s Q7s Q6s J7s J6s T6s T5s 96s 85s 74s A6o A5o A4o A3o A2o K8o K7o Q8o J8o T8o 97o 87o 76o 65o')]);
 OP['100'].SB=new Set([...OP['100'].CO,...mk('K3s K2s Q5s Q4s J5s T5s 95s A5o A4o A3o A2o K6o K5o Q7o J7o T7o 86o 75o')]);
+
+// CALL RANGES
 const CL={};
 CL['BTN']={'8':mk('AA KK QQ JJ TT 99 88 77 66 55 44 AKs AQs AJs ATs A9s A8s A7s A5s A4s KQs KJs KTs QJs JTs T9s AKo AQo AJo ATo A9o KQo'),'10':mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A9s A8s A5s KQs KJs QJs JTs AKo AQo AJo ATo KQo'),'15':mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs KQs AKo AQo AJo KQo'),'20':mk('AA KK QQ JJ TT 99 AKs AQs KQs AKo AQo')};
 CL['SB']={'8':mk('AA KK QQ JJ TT 99 88 77 66 55 44 33 22 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs K9s QJs JTs T9s 98s AKo AQo AJo ATo A9o A8o KQo KJo KTo QJo'),'10':mk('AA KK QQ JJ TT 99 88 77 66 55 44 33 AKs AQs AJs ATs A9s A8s A7s A5s A4s A3s KQs KJs KTs QJs JTs T9s AKo AQo AJo ATo A9o A8o KQo KJo'),'15':mk('AA KK QQ JJ TT 99 88 77 66 55 AKs AQs AJs ATs A9s A7s A6s A5s KQs KJs QJs JTs AKo AQo AJo ATo A9o KQo KJo'),'20':mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A8s A5s KQs QJs AKo AQo AJo ATo KQo')};
 CL['CO']={'8':mk('AA KK QQ JJ TT 99 88 77 66 55 AKs AQs AJs ATs A9s A7s A5s A4s KQs KJs QJs JTs AKo AQo AJo ATo KQo'),'10':mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A8s A5s KQs QJs AKo AQo AJo KQo'),'15':mk('AA KK QQ JJ TT 99 88 AKs AQs AJs A5s KQs AKo AQo AJo'),'20':mk('AA KK QQ JJ TT 99 AKs AQs A5s AKo AQo')};
+
+// 3-BET RANGES
 const TB={};
-TB['100']={CO_UTG:mk('AA KK QQ JJ AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo KQo'),CO_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),BTN_UTG:mk('AA KK QQ JJ AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo KQo'),BTN_MP:mk('AA KK QQ JJ TT AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),BTN_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo'),SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A3s A2s KQs AKo AQo KQo'),SB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo KQo'),SB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A8s A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs T9s AKo AQo AJo ATo A9o KQo KJo'),BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A3s A2s KQs AKo AQo KQo'),BB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),BB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo'),BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs T9s 98s AKo AQo AJo ATo A9o KQo KJo QJo'),BB_SB:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs T9s 98s 87s AKo AQo AJo ATo A9o A8o KQo KJo KTo QJo')};
-TB['50']={CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A3s A2s KQs AKo AQo KQo'),CO_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo KQo'),BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A3s A2s KQs AKo AQo KQo'),BTN_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),BTN_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo'),SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo KQo'),SB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),SB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo A9o KQo KJo'),BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo KQo'),BB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),BB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A8s A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs T9s AKo AQo AJo ATo A9o KQo KJo QJo'),BB_SB:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs T9s 98s AKo AQo AJo ATo A9o A8o KQo KJo KTo QJo')};
-TB['40']={CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo KQo'),CO_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo KQo'),BTN_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs QJs AKo AQo AJo KQo'),BTN_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo KQo'),SB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),SB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo'),BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo KQo'),BB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),BB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),BB_SB:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs T9s AKo AQo AJo ATo A9o A8o KQo KJo QJo')};
-TB['35']={CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo KQo'),CO_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),BTN_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs QJs AKo AQo AJo KQo'),BTN_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),SB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),SB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo A9o KQo KJo'),BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),BB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),BB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),BB_SB:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs T9s AKo AQo AJo ATo A9o A8o KQo KJo KTo QJo')};
-TB['30']={CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),CO_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),BTN_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),BTN_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),SB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A2s KQs AKo AQo AJo'),SB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),BB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),BB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A2s KQs KJs AKo AQo AJo ATo KQo'),BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),BB_SB:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')};
-TB['25']={CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),CO_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A2s KQs AKo AQo AJo'),BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),BTN_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A3s A2s KQs AKo AQo AJo KQo'),BTN_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),SB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A2s KQs AKo AQo AJo'),SB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),BB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A3s A2s KQs AKo AQo AJo'),BB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),BB_SB:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')};
-TB['20']={CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),CO_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),BTN_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),BTN_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),SB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),SB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),BB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo'),BB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),BB_SB:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')};
-TB['17']={CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),CO_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),BTN_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),BTN_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),SB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),SB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),BB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo'),BB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),BB_SB:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')};
-TB['15']={CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),CO_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),BTN_MP:mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo KQo'),BTN_CO:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),SB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),SB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_BTN:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),BB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),BB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo QJo'),BB_SB:mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A9s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')};
-TB['14']={CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),CO_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),BTN_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),BTN_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),SB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),SB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_BTN:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),BB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo'),BB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),BB_SB:mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')};
-TB['12']={CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),CO_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),BTN_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),BTN_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),SB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),SB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),BB_MP:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),BB_CO:mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo QJo'),BB_SB:mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A9s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')};
-TB['10']={CO_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),CO_MP:mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),BTN_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),BTN_MP:mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),BTN_CO:mk('AA KK QQ JJ TT AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),SB_MP:mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),SB_CO:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo KJo'),BB_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),BB_MP:mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),BB_CO:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),BB_BTN:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo QJo'),BB_SB:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')};
-TB['8']={CO_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),CO_MP:mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),BTN_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),BTN_MP:mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),BTN_CO:mk('AA KK QQ JJ TT AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),SB_MP:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),SB_CO:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),SB_BTN:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo KJo'),BB_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),BB_MP:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),BB_CO:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),BB_BTN:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),BB_SB:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo KQo KJo QJo')};
-TB['5']={CO_UTG:mk('AA KK AKs AKo'),CO_MP:mk('AA KK QQ AKs AQs AKo AQo'),BTN_UTG:mk('AA KK AKs AKo'),BTN_MP:mk('AA KK QQ AKs AQs AKo AQo'),BTN_CO:mk('AA KK QQ JJ AKs AQs AJs A5s A2s KQs AKo AQo AJo KQo'),SB_UTG:mk('AA KK AKs AKo'),SB_MP:mk('AA KK QQ AKs AQs AKo AQo'),SB_CO:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo KQo'),SB_BTN:mk('AA KK QQ JJ TT AKs AQs AJs ATs A5s A4s A2s KQs KJs AKo AQo AJo ATo KQo'),BB_UTG:mk('AA KK AKs AKo'),BB_MP:mk('AA KK QQ AKs AQs AKo AQo'),BB_CO:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo KQo'),BB_BTN:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo KJo'),BB_SB:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo QJo')};
+
+// ── 100BB ────────────────────────────────────────────────────────────────────
+TB['100']={
+  CO_UTG:mk('AA KK QQ JJ AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo KQo'),
+  CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),
+  BTN_UTG:mk('AA KK QQ JJ AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo KQo'),
+  BTN_MP: mk('AA KK QQ JJ TT AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),
+  BTN_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo'),
+  SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A3s A2s KQs AKo AQo KQo'),
+  SB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo KQo'),
+  SB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),
+  SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A8s A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs T9s AKo AQo AJo ATo A9o KQo KJo'),
+  BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A3s A2s KQs AKo AQo KQo'),
+  BB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),
+  BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo'),
+  BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs T9s 98s AKo AQo AJo ATo A9o KQo KJo QJo'),
+  BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs T9s 98s 87s AKo AQo AJo ATo A9o A8o KQo KJo KTo QJo')
+};
+
+// ── 50BB ─────────────────────────────────────────────────────────────────────
+TB['50']={
+  CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A3s A2s KQs AKo AQo KQo'),
+  CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo KQo'),
+  BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A3s A2s KQs AKo AQo KQo'),
+  BTN_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),
+  BTN_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo'),
+  SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo KQo'),
+  SB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),
+  SB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),
+  SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo A9o KQo KJo'),
+  BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo KQo'),
+  BB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),
+  BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),
+  BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A8s A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs T9s AKo AQo AJo ATo A9o KQo KJo QJo'),
+  BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs T9s 98s AKo AQo AJo ATo A9o A8o KQo KJo KTo QJo')
+};
+
+// ── 40BB ─────────────────────────────────────────────────────────────────────
+TB['40']={
+  CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo KQo'),
+  CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),
+  BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo KQo'),
+  BTN_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs QJs AKo AQo AJo KQo'),
+  BTN_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
+  SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo KQo'),
+  SB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),
+  SB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),
+  SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo'),
+  BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo KQo'),
+  BB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),
+  BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),
+  BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),
+  BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs T9s AKo AQo AJo ATo A9o A8o KQo KJo QJo')
+};
+
+// ── 30BB ─────────────────────────────────────────────────────────────────────
+TB['30']={
+  CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),
+  CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),
+  BTN_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),
+  BTN_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),
+  SB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A2s KQs AKo AQo AJo'),
+  SB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
+  BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),
+  BB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),
+  BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
+};
+
+// ── 25BB ─────────────────────────────────────────────────────────────────────
+TB['25']={
+  CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),
+  CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A2s KQs AKo AQo AJo'),
+  BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),
+  BTN_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A3s A2s KQs AKo AQo AJo KQo'),
+  BTN_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),
+  SB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A2s KQs AKo AQo AJo'),
+  SB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
+  BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),
+  BB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A3s A2s KQs AKo AQo AJo'),
+  BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),
+  BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
+};
+
+// ── 5BB (3-bet = shove, ultra tight) ────────────────────────────────────────
+TB['5']={
+  CO_UTG:mk('AA KK AKs AKo'),
+  CO_MP: mk('AA KK QQ AKs AQs AKo AQo'),
+  BTN_UTG:mk('AA KK AKs AKo'),
+  BTN_MP: mk('AA KK QQ AKs AQs AKo AQo'),
+  BTN_CO: mk('AA KK QQ JJ AKs AQs AJs A5s A2s KQs AKo AQo AJo KQo'),
+  SB_UTG:mk('AA KK AKs AKo'),
+  SB_MP: mk('AA KK QQ AKs AQs AKo AQo'),
+  SB_CO: mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo KQo'),
+  SB_BTN:mk('AA KK QQ JJ TT AKs AQs AJs ATs A5s A4s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  BB_UTG:mk('AA KK AKs AKo'),
+  BB_MP: mk('AA KK QQ AKs AQs AKo AQo'),
+  BB_CO: mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo KQo'),
+  BB_BTN:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo KJo'),
+  BB_SB: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo QJo')
+};
+
+// ── 8BB (3-bet = shove) ───────────────────────────────────────────────────────
+TB['8']={
+  CO_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),
+  CO_MP: mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  BTN_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),
+  BTN_MP: mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  BTN_CO: mk('AA KK QQ JJ TT AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),
+  SB_MP: mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  SB_CO: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_BTN:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo KJo'),
+  BB_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),
+  BB_MP: mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  BB_CO: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  BB_BTN:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
+  BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo KQo KJo QJo')
+};
+
+// ── 12BB (3-bet = shove) ──────────────────────────────────────────────────────
+TB['12']={
+  CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  BTN_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),
+  BTN_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  SB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  SB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
+  BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  BB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo QJo'),
+  BB_SB: mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A9s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
+};
+
+// ── 14BB (3-bet = shove) ──────────────────────────────────────────────────────
+TB['14']={
+  CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  BTN_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),
+  BTN_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
+  SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  SB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  SB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_BTN:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
+  BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  BB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo'),
+  BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),
+  BB_SB: mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
+};
+
+// ── 17BB (3-bet = shove or small 3-bet) ───────────────────────────────────────
+TB['17']={
+  CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  BTN_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),
+  BTN_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
+  SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  SB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),
+  SB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
+  BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  BB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo'),
+  BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),
+  BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
+};
+
+// ── 10BB (3-bet = shove, rango muy tight) ────────────────────────────────────
+TB['10']={
+  CO_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),
+  CO_MP: mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  BTN_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),
+  BTN_MP: mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  BTN_CO: mk('AA KK QQ JJ TT AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),
+  SB_MP: mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  SB_CO: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo KJo'),
+  BB_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),
+  BB_MP: mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  BB_CO: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  BB_BTN:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo QJo'),
+  BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
+};
+
+// ── 15BB (3-bet = shove) ──────────────────────────────────────────────────────
+TB['15']={
+  CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  BTN_MP: mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo KQo'),
+  BTN_CO: mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  SB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  SB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_BTN:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
+  BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  BB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo QJo'),
+  BB_SB: mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A9s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
+};
+
+// ── 20BB ─────────────────────────────────────────────────────────────────────
+TB['20']={
+  CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  BTN_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),
+  BTN_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
+  SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  SB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
+  SB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
+  BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  BB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo'),
+  BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
+  BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),
+  BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
+};
+
+// ── 35BB ─────────────────────────────────────────────────────────────────────
+TB['35']={
+  CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo KQo'),
+  CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),
+  BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  BTN_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs QJs AKo AQo AJo KQo'),
+  BTN_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
+  SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  SB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),
+  SB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),
+  SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo A9o KQo KJo'),
+  BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
+  BB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),
+  BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),
+  BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),
+  BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs T9s AKo AQo AJo ATo A9o A8o KQo KJo KTo QJo')
+};
+
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
 const CFG={
-  open:{stacks:['5','8','10','12','14','17','20','25','30','35','40','50','100'],positions:['UTG','MP','CO','BTN','SB'],posLabels:null,label:'Open Raise',bdgClass:'bdg-b',tipClass:'tip-b',yLabel:'ABRO',nLabel:'FOLD',activeClass:'ab'},
-  '3bet':{stacks:['5','8','10','12','14','17','20','25','30','35','40','50','100'],positions:['CO_UTG','CO_MP','BTN_UTG','BTN_MP','BTN_CO','SB_UTG','SB_MP','SB_CO','SB_BTN','BB_UTG','BB_MP','BB_CO','BB_BTN','BB_SB'],posLabels:{CO_UTG:'CO vs UTG',CO_MP:'CO vs MP',BTN_UTG:'BTN vs UTG',BTN_MP:'BTN vs MP',BTN_CO:'BTN vs CO',SB_UTG:'SB vs UTG',SB_MP:'SB vs MP',SB_CO:'SB vs CO',SB_BTN:'SB vs BTN',BB_UTG:'BB vs UTG',BB_MP:'BB vs MP',BB_CO:'BB vs CO',BB_BTN:'BB vs BTN',BB_SB:'BB vs SB'},label:'3-Bet',bdgClass:'bdg-p',tipClass:'tip-p',yLabel:'3-BET',nLabel:'FOLD/CALL',activeClass:'ap'}
+  open:{stacks:['5', '8', '10', '12', '14', '17', '20', '25', '30', '35', '40', '50', '100'],positions:['UTG','MP','CO','BTN','SB'],posLabels:null,label:'Open Raise',bdgClass:'bdg-b',tipClass:'tip-b',yLabel:'ABRO',nLabel:'FOLD',activeClass:'ab'},
+  '3bet':{stacks:['5', '8', '10', '12', '14', '17', '20', '25', '30', '35', '40', '50', '100'],positions:['CO_UTG','CO_MP','BTN_UTG','BTN_MP','BTN_CO','SB_UTG','SB_MP','SB_CO','SB_BTN','BB_UTG','BB_MP','BB_CO','BB_BTN','BB_SB'],posLabels:{CO_UTG:'CO vs UTG',CO_MP:'CO vs MP',BTN_UTG:'BTN vs UTG',BTN_MP:'BTN vs MP',BTN_CO:'BTN vs CO',SB_UTG:'SB vs UTG',SB_MP:'SB vs MP',SB_CO:'SB vs CO',SB_BTN:'SB vs BTN',BB_UTG:'BB vs UTG',BB_MP:'BB vs MP',BB_CO:'BB vs CO',BB_BTN:'BB vs BTN',BB_SB:'BB vs SB'},label:'3-Bet',bdgClass:'bdg-p',tipClass:'tip-p',yLabel:'3-BET',nLabel:'FOLD/CALL',activeClass:'ap'}
 };
+
 function isOpenAllin(st,s){s=s!==undefined?s:sit;return s==='open'&&['5','8','10'].includes(st);}
 function isOpenMixed(st,s){s=s!==undefined?s:sit;return s==='open'&&['12','14','17','20'].includes(st);}
 function getRange(s,st,p){
-  if(s==='open'){if(isOpenAllin(st,s))return PF[st]?.[p];if(isOpenMixed(st,s)){const r=OP_RAISE[st]?.[p]||new Set();const sv=OP_SHOVE[st]?.[p]||new Set();return new Set([...r,...sv]);}return OP[st]?.[p];}
-  if(s==='3bet')return TB[st]?.[p];return null;
+  if(s==='open'){
+    if(isOpenAllin(st,s)) return PF[st]?.[p];
+    if(isOpenMixed(st,s)){
+      const r=OP_RAISE[st]?.[p]||new Set();
+      const sv=OP_SHOVE[st]?.[p]||new Set();
+      return new Set([...r,...sv]);
+    }
+    return OP[st]?.[p];
+  }
+  if(s==='3bet')return TB[st]?.[p];
+  return null;
 }
-function getShoveRange(st,p,s){s=s!==undefined?s:sit;if(isOpenAllin(st,s))return PF[st]?.[p]||null;if(!isOpenMixed(st,s))return null;return OP_SHOVE[st]?.[p]||null;}
+function getShoveRange(st,p,s){
+  s=s!==undefined?s:sit;
+  if(isOpenAllin(st,s)) return PF[st]?.[p]||null;
+  if(!isOpenMixed(st,s))return null;
+  return OP_SHOVE[st]?.[p]||null;
+}
 
-// ─── PERSISTENT SAVE ──────────────────────────────────────────────────────────
+// ─── PERSISTENT SAVE (localStorage) ──────────────────────────────────────────
 const LS_KEY='rtrainer_v2';
+// customRanges[key] = { range: Set, saved: bool }
 const customRanges={};
+
 function lsLoad(){
-  try{const raw=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
-  Object.keys(raw).forEach(k=>{const v=raw[k];
-    if(Array.isArray(v)){const cl=new Set(v);customRanges[k]={range:cl,callRange:cl,raiseRange2:new Set(),allinRange:new Set(),saved:true};}
-    else{const cl=new Set(v.c||[]);const ra=new Set(v.r||[]);const ai=new Set(v.a||[]);customRanges[k]={range:new Set([...cl,...ra,...ai]),callRange:cl,raiseRange2:ra,allinRange:ai,saved:true};}
-  });}catch(e){}
+  try{
+    const raw=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
+    Object.keys(raw).forEach(k=>{
+      const v=raw[k];
+      if(Array.isArray(v)){
+        // very old format – treat all as call (green)
+        const cl=new Set(v);
+        customRanges[k]={range:cl,callRange:cl,raiseRange2:new Set(),allinRange:new Set(),saved:true};
+      } else {
+        const cl=new Set(v.c||[]);
+        const ra=new Set(v.r||[]);
+        const ai=new Set(v.a||[]);
+        customRanges[k]={range:new Set([...cl,...ra,...ai]),callRange:cl,raiseRange2:ra,allinRange:ai,saved:true};
+      }
+    });
+  }catch(e){}
 }
 function lsPersist(){
-  try{const obj={};Object.keys(customRanges).forEach(k=>{const c=customRanges[k];
-    if(c.saved)obj[k]={c:[...(c.callRange||[])],r:[...(c.raiseRange2||[])],a:[...(c.allinRange||[])]};
-  });localStorage.setItem(LS_KEY,JSON.stringify(obj));}catch(e){}
+  try{
+    const obj={};
+    Object.keys(customRanges).forEach(k=>{
+      const c=customRanges[k];
+      if(c.saved) obj[k]={c:[...(c.callRange||[])],r:[...(c.raiseRange2||[])],a:[...(c.allinRange||[])]};
+    });
+    localStorage.setItem(LS_KEY,JSON.stringify(obj));
+  }catch(e){}
 }
 lsLoad();
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let sit='open',stack='25',pos='BTN';
-let eRange=new Set(),eCallSet=new Set(),eRaiseSet=new Set(),eAllinSet=new Set(),eBrush='call';
-let bBrush='call',bCallSet=new Set(),bRaiseSet=new Set(),bAllinSet=new Set();
+let eRange=new Set();       // full editor range (raise ∪ shove for mixed)
+let eCallSet=new Set();     // call (green)
+let eRaiseSet=new Set();    // raise (bright red)
+let eAllinSet=new Set();    // all-in (dark red)
+let eBrush='call';          // 'call'|'raise'|'allin'|'erase'
+let bBrush='call';          // builder brush
+let bCallSet=new Set();     // builder call
+let bRaiseSet=new Set();    // builder raise
+let bAllinSet=new Set();    // builder all-in
 let curQ=null,bTarget=null,bSel=new Set();
 let session={cor:0,tot:0,streak:0,best:0,mistakes:{},sitAcc:{open:{c:0,t:0},'3bet':{c:0,t:0}},weights:{}};
 
@@ -890,91 +972,235 @@ function getDisplayRange(){return customRanges[getCKey()]?.range||getDefaultRang
 function getCustomState(){return customRanges[getCKey()];}
 function isModified(){const c=getCustomState();return c&&!c.saved;}
 function isSavedCustom(){const c=getCustomState();return c&&c.saved;}
-function getPosLabel(p,s){s=s&&CFG[s]?s:sit;return(CFG[s]&&CFG[s].posLabels)?.[p]||p;}
+function getPosLabel(p,s){s=s&&CFG[s]?s:sit;return (CFG[s]&&CFG[s].posLabels)?.[p]||p;}
 
-// ─── GRID ─────────────────────────────────────────────────────────────────────
+// ─── GRID BUILDER ─────────────────────────────────────────────────────────────
+// callSet=green, raiseSet=bright-red, allinSet=dark-red (all optional)
 function buildGrid(id,callSet,raiseSet,allinSet){
-  const w=document.getElementById(id);if(!w)return;w.innerHTML='';
+  const w=document.getElementById(id);if(!w)return;
+  w.innerHTML='';
   const hr=document.createElement('div');hr.className='gr';
   const c0=document.createElement('div');c0.className='gl';hr.appendChild(c0);
   R.forEach(r=>{const l=document.createElement('div');l.className='gl';l.textContent=r;hr.appendChild(l);});
   w.appendChild(hr);
-  R.forEach((_,i)=>{const row=document.createElement('div');row.className='gr';
+  R.forEach((_,i)=>{
+    const row=document.createElement('div');row.className='gr';
     const rl=document.createElement('div');rl.className='gl';rl.textContent=R[i];row.appendChild(rl);
-    R.forEach((_2,j)=>{const hd=hnd(i,j);const c=document.createElement('div');
-      c.className='cell'+(i===j?' pair':'');c.textContent=hd;c.dataset.h=hd;c.dataset.i=i;c.dataset.j=j;
-      if(allinSet&&allinSet.has(hd))c.classList.add('ain');
-      else if(raiseSet&&raiseSet.has(hd))c.classList.add('shv');
-      else if(callSet&&callSet.has(hd))c.classList.add('on');
-      row.appendChild(c);});w.appendChild(row);});
+    R.forEach((_2,j)=>{
+      const hd=hnd(i,j);
+      const c=document.createElement('div');
+      c.className='cell'+(i===j?' pair':'');
+      c.textContent=hd;c.dataset.h=hd;c.dataset.i=i;c.dataset.j=j;
+      if(allinSet&&allinSet.has(hd)) c.classList.add('ain');
+      else if(raiseSet&&raiseSet.has(hd)) c.classList.add('shv');
+      else if(callSet&&callSet.has(hd)) c.classList.add('on');
+      row.appendChild(c);
+    });
+    w.appendChild(row);
+  });
+}
+
+// ─── DRAG SYSTEM ──────────────────────────────────────────────────────────────
+function makeDraggable(elId,getSet,onChanged){
+  const el=document.getElementById(elId);if(!el)return;
+  let active=false,turnOn=false;
+  const apply=target=>{
+    const c=target?.closest?.('.cell');if(!c)return;
+    const s=getSet();const hd=c.dataset.h;
+    if(turnOn){if(!s.has(hd)){s.add(hd);c.classList.remove('shv');c.classList.add('on');onChanged?.();}}
+    else{if(s.has(hd)){s.delete(hd);c.classList.remove('on','shv');onChanged?.();}}
+  };
+  el.addEventListener('mousedown',e=>{
+    const c=e.target.closest('.cell');if(!c)return;
+    e.preventDefault();active=true;
+    const s=getSet();
+    turnOn=!(s.has(c.dataset.h));
+    apply(c);
+  });
+  el.addEventListener('mouseover',e=>{if(active)apply(e.target);});
+  document.addEventListener('mouseup',()=>{active=false;});
+  el.addEventListener('touchstart',e=>{
+    const t=e.touches[0];const c=document.elementFromPoint(t.clientX,t.clientY)?.closest?.('.cell');
+    if(!c)return;e.preventDefault();active=true;
+    turnOn=!getSet().has(c.dataset.h);apply(c);
+  },{passive:false});
+  el.addEventListener('touchmove',e=>{
+    if(!active)return;e.preventDefault();
+    const t=e.touches[0];apply(document.elementFromPoint(t.clientX,t.clientY));
+  },{passive:false});
+  el.addEventListener('touchend',()=>{active=false;});
 }
 
 // ─── EXPLORER ─────────────────────────────────────────────────────────────────
 function renderExplorer(){
   updateCellSize&&setTimeout(updateCellSize,0);
-  const displayed=getDisplayRange();const shv=getShoveRange(stack,pos);const isCustom=!!getCustomState();
-  if(isCustom){const cs=getCustomState();eCallSet=new Set(cs.callRange||cs.raiseRange||cs.range||[]);eRaiseSet=new Set(cs.raiseRange2||[]);eAllinSet=new Set(cs.allinRange||cs.shoveRange||[]);eRange=new Set([...eCallSet,...eRaiseSet,...eAllinSet]);buildGrid('eg',eCallSet,eRaiseSet,eAllinSet);}
-  else if(isOpenAllin(stack)){eCallSet=new Set();eRaiseSet=new Set();eAllinSet=new Set(PF[stack]?.[pos]||[]);eRange=new Set(eAllinSet);buildGrid('eg',null,null,eAllinSet);}
-  else if(shv){eCallSet=new Set(OP_RAISE[stack]?.[pos]||[]);eRaiseSet=new Set();eAllinSet=new Set(shv);eRange=new Set([...eCallSet,...eAllinSet]);buildGrid('eg',eCallSet,eRaiseSet,eAllinSet);}
-  else{eCallSet=new Set(displayed);eRaiseSet=new Set();eAllinSet=new Set();eRange=new Set(displayed);buildGrid('eg',eCallSet,null,null);}
+  const displayed=getDisplayRange();
+  const shv=getShoveRange(stack,pos);
+  const isCustom=!!getCustomState();
+  if(isCustom){
+    // Custom save: stored as {raiseRange, shoveRange} or legacy flat {range}
+    const cs=getCustomState();
+    eCallSet=new Set(cs.callRange||cs.raiseRange||cs.range||[]);
+    eRaiseSet=new Set(cs.raiseRange2||[]);
+    eAllinSet=new Set(cs.allinRange||cs.shoveRange||[]);
+    eRange=new Set([...eCallSet,...eRaiseSet,...eAllinSet]);
+    buildGrid('eg',eCallSet,eRaiseSet,eAllinSet);
+  } else if(isOpenAllin(stack)){
+    // entire range = all-in (PF data)
+    eCallSet=new Set();
+    eRaiseSet=new Set();
+    eAllinSet=new Set(PF[stack]?.[pos]||[]);
+    eRange=new Set(eAllinSet);
+    buildGrid('eg',null,null,eAllinSet);
+  } else if(shv){
+    eCallSet=new Set(OP_RAISE[stack]?.[pos]||[]);
+    eRaiseSet=new Set();
+    eAllinSet=new Set(shv);
+    eRange=new Set([...eCallSet,...eAllinSet]);
+    buildGrid('eg',eCallSet,eRaiseSet,eAllinSet);
+  } else {
+    eCallSet=new Set(displayed);
+    eRaiseSet=new Set();
+    eAllinSet=new Set();
+    eRange=new Set(displayed);
+    buildGrid('eg',eCallSet,null,null);
+  }
   updateEStats();
 }
+
 function updateEStats(){
-  let cc=0;eRange.forEach(hd=>cc+=cmb(hd));const pct=cc/1326*100;
+  let cc=0;eRange.forEach(hd=>cc+=cmb(hd));
+  const pct=cc/1326*100;
+  // per-color combos
   let ccCall=0,ccRaise=0,ccAllin=0;
-  eCallSet.forEach(hd=>ccCall+=cmb(hd));eRaiseSet.forEach(hd=>ccRaise+=cmb(hd));eAllinSet.forEach(hd=>ccAllin+=cmb(hd));
-  document.getElementById('r-hands').textContent=eRange.size;document.getElementById('r-cmb').textContent=cc;document.getElementById('r-pct').textContent=pct.toFixed(1)+'%';
-  const foldCmb=1326-cc;const callPct=ccCall/1326*100,raisePct=ccRaise/1326*100,allinPct=ccAllin/1326*100,foldPct=foldCmb/1326*100;
-  document.getElementById('rbar-call').style.width=callPct+'%';document.getElementById('rbar-raise').style.width=raisePct+'%';document.getElementById('rbar-allin').style.width=allinPct+'%';document.getElementById('rbar-fold').style.width=foldPct+'%';
-  document.getElementById('rbd-call-pct').textContent=callPct.toFixed(1)+'%';document.getElementById('rbd-call-cmb').textContent=ccCall+' combos';
-  document.getElementById('rbd-raise-pct').textContent=raisePct.toFixed(1)+'%';document.getElementById('rbd-raise-cmb').textContent=ccRaise+' combos';
-  document.getElementById('rbd-allin-pct').textContent=allinPct.toFixed(1)+'%';document.getElementById('rbd-allin-cmb').textContent=ccAllin+' combos';
-  document.getElementById('rbd-fold-pct').textContent=foldPct.toFixed(1)+'%';document.getElementById('rbd-fold-cmb').textContent=foldCmb+' combos';
-  document.getElementById('ac-raise-box').style.display=ccRaise>0?'flex':'none';document.getElementById('ac-allin-box').style.display=ccAllin>0?'flex':'none';
-  const nCards=2+(ccRaise>0?1:0)+(ccAllin>0?1:0);document.documentElement.style.setProperty('--info-w',(nCards*130+20)+'px');setTimeout(updateCellSize,50);
+  eCallSet.forEach(hd=>ccCall+=cmb(hd));
+  eRaiseSet.forEach(hd=>ccRaise+=cmb(hd));
+  eAllinSet.forEach(hd=>ccAllin+=cmb(hd));
+  const hasColors=ccCall>0||ccRaise>0||ccAllin>0;
+  const hasMulti=(ccCall>0)+(ccRaise>0)+(ccAllin>0)>1;
+  document.getElementById('r-hands').textContent=eRange.size;
+  document.getElementById('r-cmb').textContent=cc;
+  document.getElementById('r-pct').textContent=pct.toFixed(1)+'%';
+  // action cards
+  const foldCmb=1326-cc;
+  const callPct=ccCall/1326*100, raisePct=ccRaise/1326*100, allinPct=ccAllin/1326*100, foldPct=foldCmb/1326*100;
+  // bar segments
+  document.getElementById('rbar-call').style.width=callPct+'%';
+  document.getElementById('rbar-raise').style.width=raisePct+'%';
+  document.getElementById('rbar-allin').style.width=allinPct+'%';
+  document.getElementById('rbar-fold').style.width=foldPct+'%';
+  // cards
+  document.getElementById('rbd-call-pct').textContent=callPct.toFixed(1)+'%';
+  document.getElementById('rbd-call-cmb').textContent=ccCall+' combos';
+  document.getElementById('rbd-raise-pct').textContent=raisePct.toFixed(1)+'%';
+  document.getElementById('rbd-raise-cmb').textContent=ccRaise+' combos';
+  document.getElementById('rbd-allin-pct').textContent=allinPct.toFixed(1)+'%';
+  document.getElementById('rbd-allin-cmb').textContent=ccAllin+' combos';
+  document.getElementById('rbd-fold-pct').textContent=foldPct.toFixed(1)+'%';
+  document.getElementById('rbd-fold-cmb').textContent=foldCmb+' combos';
+  // show/hide raise & allin cards
+  document.getElementById('ac-raise-box').style.display=ccRaise>0?'flex':'none';
+  document.getElementById('ac-allin-box').style.display=ccAllin>0?'flex':'none';
+  // widen info-col based on active cards: base 200px + 130px per card
+  const nCards=2+(ccRaise>0?1:0)+(ccAllin>0?1:0); // call + fold always + extras
+  const infoW=nCards*130+20;
+  document.documentElement.style.setProperty('--info-w',infoW+'px');
+  setTimeout(updateCellSize,50);
+  // rename call card label
   document.getElementById('ac-call-box').querySelector('.ac-name').textContent=ccRaise>0||ccAllin>0?'Call':'En rango';
-  const mod=isModified(),sav=isSavedCustom();document.getElementById('e-badge-mod').classList.toggle('show',mod);document.getElementById('e-badge-sav').classList.toggle('show',sav&&!mod);
-  document.getElementById('e-legend').style.display=(isOpenMixed(stack)&&!getCustomState())?'flex':'none';
+  // badges
+  const mod=isModified(),sav=isSavedCustom();
+  document.getElementById('e-badge-mod').classList.toggle('show',mod);
+  document.getElementById('e-badge-sav').classList.toggle('show',sav&&!mod);
+  // legend
+  const showLeg=isOpenMixed(stack)&&!getCustomState();
+  document.getElementById('e-legend').style.display=showLeg?'flex':'none';
+  // brush row — show whenever mixed (custom or default)
   document.getElementById('brush-row').style.display='flex';
-  document.getElementById('r-tip').className='tip '+CFG[sit].tipClass;document.getElementById('r-tip').innerHTML=getTip(sit,stack,pos,eRange,pct);
-  document.getElementById('r-extra-row').style.display='none';
-}
-function getTip(s,st,p,range,pct){
-  const bb=parseInt(st),posLbl=getPosLabel(p);
-  if(s==='open'){
-    if(isOpenAllin(st))return`<strong>Open Raise ${bb}BB — ${posLbl}</strong> — Con ${bb}BB la apertura ES un all-in directo. Decisión binaria: shove o fold. Empujas el <strong>${pct.toFixed(0)}%</strong> del rango.`;
-    if(isOpenMixed(st)){const shv=getShoveRange(st,p)||new Set();let scmb=0;shv.forEach(hd=>scmb+=cmb(hd));return`<strong>Apertura ${bb}BB — ${posLbl}</strong> — Dos acciones: <span style="color:var(--gbr)">■ Call/Raise</span> con manos especulativas · <span style="color:#ef4444">■ All-in</span> con manos fuertes (${(scmb/1326*100).toFixed(1)}% del rango).`;}
-    const size=bb>=50?'2.2x':bb>=30?'2.5x':'3x';return`<strong>Apertura ${bb}BB — ${posLbl}</strong> — Abre a ${size}. Rango MTT ajustado: sin rake, con presión ICM.`;
-  }
-  if(s==='3bet'){const parts=p.split('_');return`<strong>3-Bet desde ${parts[0]} vs ${parts[1]} (${bb}BB)</strong> — Rango polar: valor puro + bluffs con blockers. Sizing: 3x IP, 3.5-4x OOP.`;}
-  return'';
+  // brush buttons always visible
+  // reset to raise if shove selected but not available
+
+  // tip
+  document.getElementById('r-tip').className='tip '+CFG[sit].tipClass;
+  document.getElementById('r-tip').innerHTML=getTip(sit,stack,pos,eRange,pct);
+  // extra row
+  const er=document.getElementById('r-extra-row');
+  er.style.display='none';
 }
 
-// ─── SAVE / RESET / COPY (with cloud sync) ───────────────────────────────────
+function getTip(s,st,p,range,pct){
+  const bb=parseInt(st),posLbl=getPosLabel(p);
+
+  if(s==='open'){
+    if(isOpenAllin(st)) return `<strong>Open Raise ${bb}BB — ${posLbl}</strong> — Con ${bb}BB la apertura ES un all-in directo. Decisión binaria: shove o fold. Empujas el <strong>${pct.toFixed(0)}%</strong> del rango — fold equity + equity propia hacen rentable pushear amplio desde posición tardía.`;
+    if(isOpenMixed(st)){
+      const shv=getShoveRange(st,p)||new Set();
+      let scmb=0;shv.forEach(hd=>scmb+=cmb(hd));
+      const spct=(scmb/1326*100).toFixed(1);
+      return `<strong>Apertura ${bb}BB — ${posLbl}</strong> — Dos acciones: <span style="color:var(--gbr)">■ Call/Raise</span> con manos especulativas · <span style="color:#ef4444">■ All-in</span> con manos fuertes para negar fold equity al 3-bettor (${spct}% del rango). Con stacks de ${bb}BB no conviene abrir y tener que llamar un 3-bet con dudas.`;
+    }
+    const size=bb>=50?'2.2x':bb>=30?'2.5x':'3x';
+    return `<strong>Apertura ${bb}BB — ${posLbl}</strong> — Abre a ${size}. Rango MTT ajustado: sin rake, con presión ICM. BTN/CO pueden abrir ${pct.toFixed(0)}% del rango. Cuidado con stacks de 15-20BB detrás que pueden re-shove.`;
+  }
+  if(s==='3bet'){const parts=p.split('_');const my=parts[0],vs=parts[1];return `<strong>3-Bet desde ${my} vs ${vs} (${bb}BB)</strong> — Rango polar: valor puro (AA-QQ,AKs) + bluffs con blockers (A5s-A2s). Vs UTG/MP: aprieta solo a premium. Vs BTN/SB: amplía bluffs porque abren muy wide. El sizing ideal es 3x IP y 3.5-4x OOP.`;}
+
+
+  return '';
+}
+
+// ─── SAVE / RESET / COPY ──────────────────────────────────────────────────────
 document.getElementById('e-save').addEventListener('click',()=>{
-  const key=getCKey();
-  customRanges[key]={callRange:new Set(eCallSet),raiseRange2:new Set(eRaiseSet),allinRange:new Set(eAllinSet),range:new Set(eRange),saved:true};
-  lsPersist();saveRangeToCloud(key);updateEStats();
-  const btn=document.getElementById('e-save');btn.textContent='✓ Guardado';setTimeout(()=>btn.textContent='✓ Guardar',1200);
+  customRanges[getCKey()]={
+    callRange:  new Set(eCallSet),
+    raiseRange2:new Set(eRaiseSet),
+    allinRange: new Set(eAllinSet),
+    range: new Set(eRange),
+    saved:true
+  };
+  lsPersist();
+  updateEStats();
+  const btn=document.getElementById('e-save');
+  btn.textContent='✓ Guardado';
+  setTimeout(()=>btn.textContent='✓ Guardar',1200);
 });
+
 document.getElementById('e-reset').addEventListener('click',()=>{
-  const k=getCKey();delete customRanges[k];lsPersist();deleteRangeFromCloud(k);renderExplorer();
+  const k=getCKey();
+  delete customRanges[k];
+  lsPersist();
+  renderExplorer();
 });
+
 document.getElementById('e-copy').addEventListener('click',()=>{
-  navigator.clipboard?.writeText([...eRange].sort().join(' ')).catch(()=>{});
-  const btn=document.getElementById('e-copy');btn.textContent='✓ Copiado';setTimeout(()=>btn.textContent='⎘ Copiar',1500);
+  const txt=[...eRange].sort().join(' ');
+  navigator.clipboard?.writeText(txt).catch(()=>{});
+  const btn=document.getElementById('e-copy');
+  btn.textContent='✓ Copiado';
+  setTimeout(()=>btn.textContent='⎘ Copiar',1500);
 });
 
 // ─── MINI GRID ────────────────────────────────────────────────────────────────
-function renderMiniGrid(cid,callSet,raiseSet,allinSet,hand){
-  const wrap=document.getElementById(cid);if(!wrap)return;
+function renderMiniGrid(containerId,callSet,raiseSet,allinSet,hand){
+  const wrap=document.getElementById(containerId);if(!wrap)return;
   const mg=document.createElement('div');mg.className='mini-grid-wrap';
-  R.forEach((_,i)=>{const row=document.createElement('div');row.className='mini-row';
-    R.forEach((_2,j)=>{const hd=hnd(i,j);const c=document.createElement('div');c.className='mini-cell';
-      const inC=callSet&&callSet.has(hd),inR=raiseSet&&raiseSet.has(hd),inA=allinSet&&allinSet.has(hd),isQ=hd===hand;
-      if(isQ&&(inC||inR||inA))c.classList.add('hl');else if(isQ)c.classList.add('hl-no');
-      else if(inA)c.classList.add('ain');else if(inR)c.classList.add('shv');else if(inC)c.classList.add('on');
-      row.appendChild(c);});mg.appendChild(row);});
+  R.forEach((_,i)=>{
+    const row=document.createElement('div');row.className='mini-row';
+    R.forEach((_2,j)=>{
+      const hd=hnd(i,j);
+      const c=document.createElement('div');c.className='mini-cell';
+      const inC=callSet&&callSet.has(hd);
+      const inR=raiseSet&&raiseSet.has(hd);
+      const inA=allinSet&&allinSet.has(hd);
+      const isQ=hd===hand;
+      if(isQ&&(inC||inR||inA)) c.classList.add('hl');
+      else if(isQ) c.classList.add('hl-no');
+      else if(inA) c.classList.add('ain');
+      else if(inR) c.classList.add('shv');
+      else if(inC) c.classList.add('on');
+      row.appendChild(c);
+    });
+    mg.appendChild(row);
+  });
   wrap.innerHTML='<div style="font-size:10px;color:var(--txt3);margin-bottom:4px">Posición de '+hand+' en el rango:</div>';
   wrap.appendChild(mg);
 }
@@ -985,204 +1211,654 @@ function pickWeightedHand(){
   const useHard=document.getElementById('diff-only').checked&&hard.length>0;
   const pool=useHard?hard:ALL_HANDS;
   const total=pool.reduce((s,hd)=>s+(session.weights[hd]||1),0);
-  let r=Math.random()*total;for(const hd of pool){r-=(session.weights[hd]||1);if(r<=0)return hd;}return pool[pool.length-1];
+  let r=Math.random()*total;
+  for(const hd of pool){r-=(session.weights[hd]||1);if(r<=0)return hd;}
+  return pool[pool.length-1];
 }
+function pickQuizScen(){
+  const cfg=CFG[sit];
+  const st=cfg.stacks[Math.floor(Math.random()*cfg.stacks.length)];
+  const p=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];
+  return{st,p};
+}
+// Poker table seat positions: [left%, top%] relative to ptable-outer (incl padding)
 const _SEATS_POS={UTG:[15,10],MP:[50,5],CO:[85,10],BTN:[95,52],SB:[80,92],BB:[20,92]};
 const _SEATS_ORD=['UTG','MP','CO','BTN','SB','BB'];
-const _SUITS_SYM={s:'♠',h:'♥',d:'♦',c:'♣'};const _SUITS_ALL=['s','h','d','c'];
+const _SUITS_SYM={s:'♠',h:'♥',d:'♦',c:'♣'};
+const _SUITS_ALL=['s','h','d','c'];
 function _randSuit(){return _SUITS_ALL[Math.floor(Math.random()*4)];}
-function _parseHand(hd){const r1=hd[0],r2=hd[1];let s1,s2;
+function _parseHand(hd){
+  const r1=hd[0],r2=hd[1];
+  let s1,s2;
   if(isPair(hd)){s1=_randSuit();do{s2=_randSuit();}while(s2===s1);}
-  else if(isSuited(hd)){s1=_randSuit();s2=s1;}else{s1=_randSuit();do{s2=_randSuit();}while(s2===s1);}
-  return{r1,r2,s1,s2};}
+  else if(isSuited(hd)){s1=_randSuit();s2=s1;}
+  else{s1=_randSuit();do{s2=_randSuit();}while(s2===s1);}
+  return{r1,r2,s1,s2};
+}
 function _heroPos(pos,s){s=s!==undefined?s:sit;return s==='3bet'?pos.split('_')[0]:pos;}
+
 function renderPokerTable(hd,pos,st,eSit){
-  eSit=eSit!==undefined?eSit:sit;const outer=document.getElementById('q-table-outer');if(!outer)return;
+  eSit=eSit!==undefined?eSit:sit;
+  const outer=document.getElementById('q-table-outer');
+  if(!outer)return;
   outer.querySelectorAll('.pseat,.pdealerbtn,.table-chips').forEach(e=>e.remove());
-  const sl=document.getElementById('q-stack-lbl');if(sl)sl.textContent=st+'BB';
-  const heroP=_heroPos(pos,eSit);const openerP=(eSit==='3bet'&&pos.includes('_'))?pos.split('_')[1]:null;
+  const sl=document.getElementById('q-stack-lbl');
+  if(sl) sl.textContent=st+'BB';
+  const heroP=_heroPos(pos,eSit);
+  // For 3-bet: extract who opened
+  const openerP=(eSit==='3bet'&&pos.includes('_'))?pos.split('_')[1]:null;
   const{r1,r2,s1,s2}=_parseHand(hd);
-  _SEATS_ORD.forEach(sp=>{const[lp,tp]=_SEATS_POS[sp];const isHero=(sp===heroP);const isOpener=(sp===openerP);
-    const seat=document.createElement('div');seat.className='pseat'+(isHero?' hero':isOpener?' opener':'');seat.style.left=lp+'%';seat.style.top=tp+'%';
-    const cardWrap=document.createElement('div');cardWrap.className='pseat-cards';
-    if(isHero){[s1,s2].forEach((su,i)=>{const rank=i===0?r1:r2;const cd=document.createElement('div');cd.className='pcard-hero suit-'+su;cd.innerHTML='<div class="pcr">'+rank+'</div><div style="position:absolute;bottom:2px;right:2px;font-size:32px;opacity:.85;color:#fff;line-height:1;">'+_SUITS_SYM[su]+'</div>';cardWrap.appendChild(cd);});}
-    else if(isOpener){cardWrap.innerHTML='<div class="pcard-open" style="transform:rotate(-8deg);margin-right:-8px;"></div><div class="pcard-open" style="transform:rotate(4deg);"></div>';}
-    else{cardWrap.innerHTML='<div class="pcard-back"></div><div class="pcard-back"></div>';}
-    seat.appendChild(cardWrap);const lbl=document.createElement('div');lbl.className='pseat-label';
-    const displayStack=isOpener?(parseInt(st)-2)+'BB':st+'BB';lbl.innerHTML='<div class="sp">'+sp+'</div><div class="ss">'+displayStack+'</div>';seat.appendChild(lbl);outer.appendChild(seat);
-    if(isOpener){const cx=50,cy=52,chipX=lp+(cx-lp)*0.35,chipY=tp+(cy-tp)*0.35;const chips=document.createElement('div');chips.className='table-chips';chips.style.left=chipX+'%';chips.style.top=chipY+'%';chips.innerHTML='<div class="pseat-chip c-red"></div><div class="pseat-chip c-white"></div><div class="table-bet-lbl">2BB</div>';outer.appendChild(chips);}});
-  const[bx,by]=_SEATS_POS['BTN'];const db=document.createElement('div');db.className='pdealerbtn';db.textContent='D';db.style.left=(bx-7)+'%';db.style.top=(by-10)+'%';outer.appendChild(db);
+  _SEATS_ORD.forEach(sp=>{
+    const[lp,tp]=_SEATS_POS[sp];
+    const isHero=(sp===heroP);
+    const isOpener=(sp===openerP);
+    const seat=document.createElement('div');
+    seat.className='pseat'+(isHero?' hero':isOpener?' opener':'');
+    seat.style.left=lp+'%';seat.style.top=tp+'%';
+    // cards
+    const cardWrap=document.createElement('div');
+    cardWrap.className='pseat-cards';
+    if(isHero){
+      [s1,s2].forEach((su,i)=>{
+        const rank=i===0?r1:r2;
+        const cd=document.createElement('div');
+        cd.className='pcard-hero suit-'+su;
+        cd.innerHTML='<div class="pcr">'+rank+'</div><div style="position:absolute;bottom:2px;right:2px;font-size:32px;opacity:.85;color:#fff;line-height:1;">'+_SUITS_SYM[su]+'</div>';
+        cardWrap.appendChild(cd);
+      });
+    } else if(isOpener){
+      // Show two "raised" cards — red tinted, slightly fanned
+      cardWrap.innerHTML='<div class="pcard-open" style="transform:rotate(-8deg);margin-right:-8px;"></div><div class="pcard-open" style="transform:rotate(4deg);"></div>';
+    } else {
+      cardWrap.innerHTML='<div class="pcard-back"></div><div class="pcard-back"></div>';
+    }
+    seat.appendChild(cardWrap);
+    // label — opener shows stack minus 2BB
+    const lbl=document.createElement('div');
+    lbl.className='pseat-label';
+    const displayStack=isOpener?(parseInt(st)-2)+'BB':st+'BB';
+    lbl.innerHTML='<div class="sp">'+sp+'</div><div class="ss">'+displayStack+'</div>';
+    seat.appendChild(lbl);
+    outer.appendChild(seat);
+    // chips on the table felt for opener
+    if(isOpener){
+      // Interpolate 35% from seat toward table center (50%, 52%)
+      const cx=50,cy=52;
+      const chipX=lp+(cx-lp)*0.35;
+      const chipY=tp+(cy-tp)*0.35;
+      const chips=document.createElement('div');
+      chips.className='table-chips';
+      chips.style.left=chipX+'%';
+      chips.style.top=chipY+'%';
+      chips.innerHTML=
+        '<div class="pseat-chip c-red"></div>'+
+        '<div class="pseat-chip c-white"></div>'+
+        '<div class="table-bet-lbl">2BB</div>';
+      outer.appendChild(chips);
+    }
+  });
+  // Dealer button near BTN
+  const[bx,by]=_SEATS_POS['BTN'];
+  const db=document.createElement('div');
+  db.className='pdealerbtn';
+  db.textContent='D';
+  db.style.left=(bx-7)+'%';db.style.top=(by-10)+'%';
+  outer.appendChild(db);
 }
-function actionFromCustom(hd,custom){if(!custom)return null;if(custom.allinRange&&custom.allinRange.has(hd))return'allin';if(custom.raiseRange2&&custom.raiseRange2.has(hd))return'raise';if(custom.callRange&&custom.callRange.has(hd))return'call';return'fold';}
+
+
+// Helper: given a custom range object, return the action for hand hd
+function actionFromCustom(hd, custom){
+  if(!custom) return null;
+  if(custom.allinRange && custom.allinRange.has(hd)) return 'allin';
+  if(custom.raiseRange2 && custom.raiseRange2.has(hd)) return 'raise';
+  if(custom.callRange && custom.callRange.has(hd)) return 'call';
+  return 'fold';
+}
+
 function getCorrectAction(hd,qs,st,p){
-  const key=qs+'_'+st+'_'+p;const custom=customRanges[key];
-  if(qs==='open'){if(custom)return actionFromCustom(hd,custom);if(isOpenAllin(st,qs)){const r=getRange(qs,st,p);return r&&r.has(hd)?'allin':'fold';}if(isOpenMixed(st,qs)){const shv=OP_SHOVE[st]?.[p];const rai=OP_RAISE[st]?.[p];if(shv&&shv.has(hd))return'allin';if(rai&&rai.has(hd))return'call';return'fold';}const r=getRange(qs,st,p);return r&&r.has(hd)?'raise':'fold';}
-  if(qs==='3bet'){if(custom)return actionFromCustom(hd,custom);const r=getRange(qs,st,p);return r&&r.has(hd)?'raise':'fold';}return'fold';
+  const key=qs+'_'+st+'_'+p;
+  const custom=customRanges[key];
+
+  if(qs==='open'){
+    // Si hay rango custom, respeta exactamente el color guardado
+    if(custom){
+      return actionFromCustom(hd, custom);
+    }
+
+    // Rangos por defecto
+    if(isOpenAllin(st,qs)){
+      const r=getRange(qs,st,p);
+      return r && r.has(hd) ? 'allin' : 'fold';
+    }
+
+    if(isOpenMixed(st,qs)){
+      const shv=OP_SHOVE[st]?.[p];
+      const rai=OP_RAISE[st]?.[p];
+
+      if(shv && shv.has(hd)) return 'allin';
+      if(rai && rai.has(hd)) return 'call';   // <-- antes devolvía 'raise'
+      return 'fold';
+    }
+
+    const r=getRange(qs,st,p);
+    return r && r.has(hd) ? 'raise' : 'fold';
+  }
+
+  if(qs==='3bet'){
+    if(custom){
+      return actionFromCustom(hd, custom);
+    }
+    const r=getRange(qs,st,p);
+    return r && r.has(hd) ? 'raise' : 'fold';
+  }
+
+  return 'fold';
 }
-function actionLabel(act){return{allin:'All-in',raise:'Raise',call:'Call',fold:'Fold'}[act]||act;}
+
+function actionLabel(act){
+  return{allin:'All-in',raise:'Raise',call:'Call',fold:'Fold'}[act]||act;
+}
 function nextQ(){
-  const hd=pickWeightedHand();let qSit=sit,qSt=stack,qPos=pos;
-  if(qSit==='any'){qSit=['open','3bet'][Math.floor(Math.random()*2)];const cfg=CFG[qSit];qSt=cfg.stacks[Math.floor(Math.random()*cfg.stacks.length)];qPos=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];}
-  else if(qSt==='any'&&qPos==='any'){const cfg=CFG[qSit];qSt=cfg.stacks[Math.floor(Math.random()*cfg.stacks.length)];qPos=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];}
-  else if(qSt==='any'){const cfg=CFG[qSit];qSt=cfg.stacks[Math.floor(Math.random()*cfg.stacks.length)];if(!cfg.positions.includes(qPos))qPos=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];}
-  else if(qPos==='any'){const cfg=CFG[qSit];qPos=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];}
-  const qKey=qSit+'_'+qSt+'_'+qPos;const qCustom=customRanges[qKey];
+  const hd=pickWeightedHand();
+  // Resolve effective sit/stack/pos — respects 'any' wildcards
+  let qSit=sit,qSt=stack,qPos=pos;
+  if(qSit==='any'){
+    qSit=['open','3bet'][Math.floor(Math.random()*2)];
+    const cfg=CFG[qSit];
+    qSt=cfg.stacks[Math.floor(Math.random()*cfg.stacks.length)];
+    qPos=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];
+  } else if(qSt==='any'&&qPos==='any'){
+    const cfg=CFG[qSit];
+    qSt=cfg.stacks[Math.floor(Math.random()*cfg.stacks.length)];
+    qPos=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];
+  } else if(qSt==='any'){
+    const cfg=CFG[qSit];
+    qSt=cfg.stacks[Math.floor(Math.random()*cfg.stacks.length)];
+    if(!cfg.positions.includes(qPos)) qPos=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];
+  } else if(qPos==='any'){
+    const cfg=CFG[qSit];
+    qPos=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];
+  }
+  // Use saved custom range if it exists, otherwise default
+  const qKey=qSit+'_'+qSt+'_'+qPos;
+  const qCustom=customRanges[qKey];
   const qAct=getCorrectAction(hd,qSit,qSt,qPos);
+  const range=qCustom?.range||(getRange(qSit,qSt,qPos)||new Set());
   curQ={hd,st:qSt,p:qPos,inRange:qAct!=='fold',sit:qSit};
+  const cfg=CFG[qSit];
   let ctx='';
-  if(qSit==='open')ctx=isOpenAllin(qSt,qSit)?`<strong>Open Raise</strong> · Stack <strong>${qSt}BB</strong> · Pos: <strong>${qPos}</strong> · ¿Shove o fold?`:isOpenMixed(qSt,qSit)?`<strong>Open Raise</strong> · Stack <strong>${qSt}BB</strong> · Pos: <strong>${qPos}</strong> · ¿Juegas?`:`<strong>Open Raise</strong> · Stack <strong>${qSt}BB</strong> · Pos: <strong>${qPos}</strong> · ¿Abres?`;
+  if(qSit==='open') ctx=isOpenAllin(qSt,qSit)?`<strong>Open Raise</strong> · Stack <strong>${qSt}BB</strong> · Pos: <strong>${qPos}</strong> · ¿Shove o fold?`:isOpenMixed(qSt,qSit)?`<strong>Open Raise</strong> · Stack <strong>${qSt}BB</strong> · Pos: <strong>${qPos}</strong> · ¿Juegas? (raise/shove)`:`<strong>Open Raise</strong> · Stack <strong>${qSt}BB</strong> · Pos: <strong>${qPos}</strong> · ¿Abres?`;
   else ctx=`<strong>3-Bet</strong> · Stack <strong>${qSt}BB</strong> · <strong>${getPosLabel(qPos,qSit)}</strong> · ¿Haces 3-bet?`;
-  document.getElementById('q-ctx').innerHTML=ctx;document.getElementById('q-fb').className='fb';document.getElementById('q-fb').innerHTML='';
+  document.getElementById('q-ctx').innerHTML=ctx;
+  document.getElementById('q-fb').className='fb';
+  document.getElementById('q-fb').innerHTML='';
   setQBtnsDisabled(false);
   document.getElementById('diff-cnt').textContent=(()=>{const n=Object.keys(session.mistakes).filter(x=>session.mistakes[x]>=2).length;return n>0?`(${n} manos)`:''})();
   renderPokerTable(hd,qPos,qSt,qSit);
 }
-function setQBtnsDisabled(dis){['allin','raise','call','fold'].forEach(a=>{const b=document.getElementById('q-btn-'+a);if(b)b.disabled=dis;});}
+
+function setQBtnsDisabled(dis){
+  ['allin','raise','call','fold'].forEach(a=>{
+    const b=document.getElementById('q-btn-'+a);
+    if(b) b.disabled=dis;
+  });
+}
+
 function answerAction(act){
-  if(!curQ)return;const{hd,st,p,inRange,sit:qs}=curQ;const correct=getCorrectAction(hd,qs,st,p);const right=(act===correct);
+  if(!curQ)return;
+  const{hd,st,p,inRange,sit:qs}=curQ;
+  const correct=getCorrectAction(hd,qs,st,p);
+  const right=(act===correct);
   session.tot++;if(session.sitAcc[qs])session.sitAcc[qs].t++;
   if(right){session.cor++;session.streak++;session.best=Math.max(session.best,session.streak);if(session.sitAcc[qs])session.sitAcc[qs].c++;session.weights[hd]=Math.max(1,(session.weights[hd]||1)-0.5);}
   else{session.streak=0;session.weights[hd]=(session.weights[hd]||1)+2;session.mistakes[hd]=(session.mistakes[hd]||0)+1;}
-  updateHdrStats();saveStatsToCloud();
+  updateHdrStats();
   const fb=document.getElementById('q-fb');
-  const qKey=qs+'_'+st+'_'+p;const qCustom=customRanges[qKey];
-  const isAllinSt=isOpenAllin(st,qs),isMixedSt=isOpenMixed(st,qs);
-  let mgCall,mgRaise,mgAllin;
-  if(qCustom){mgCall=qCustom.callRange||new Set();mgRaise=qCustom.raiseRange2||new Set();mgAllin=qCustom.allinRange||new Set();}
-  else if(isMixedSt){mgCall=OP_RAISE[st]?.[p]||new Set();mgRaise=new Set();mgAllin=OP_SHOVE[st]?.[p]||new Set();}
-  else if(isAllinSt){mgCall=new Set();mgRaise=new Set();mgAllin=getRange(qs,st,p)||new Set();}
-  else{mgCall=getRange(qs,st,p)||new Set();mgRaise=new Set();mgAllin=new Set();}
+  const why=buildWhy(hd,inRange,qs,st,p);
   fb.className='fb show '+(right?'ok':'bad');
-  fb.innerHTML=(right?'✓ <strong>Correcto</strong>':'✗ <strong>Incorrecto</strong>')+` — Elegiste <strong>${actionLabel(act)}</strong>, la respuesta correcta es <strong>${actionLabel(correct)}</strong>.<div id="q-mini"></div>`;
-  renderMiniGrid('q-mini',mgCall,mgRaise,mgAllin,hd);setQBtnsDisabled(true);
+  // Build mini grid — use exact saved color sets if available
+  const qKey=qs+'_'+st+'_'+p;
+  const qCustom=customRanges[qKey];
+  const isAllinSt=isOpenAllin(st,qs);
+  const isMixedSt=isOpenMixed(st,qs);
+  let mgCall,mgRaise,mgAllin;
+  if(qCustom){
+    mgCall =qCustom.callRange  ||new Set();
+    mgRaise=qCustom.raiseRange2||new Set();
+    mgAllin=qCustom.allinRange ||new Set();
+  } else if(isMixedSt){
+    mgCall =OP_RAISE[st]?.[p]||new Set();
+    mgRaise=new Set();
+    mgAllin=OP_SHOVE[st]?.[p]||new Set();
+  } else if(isAllinSt){
+    mgCall =new Set();
+    mgRaise=new Set();
+    mgAllin=getRange(qs,st,p)||new Set();
+  } else {
+    mgCall =getRange(qs,st,p)||new Set();
+    mgRaise=new Set();
+    mgAllin=new Set();
+  }
+
+  fb.innerHTML=(right?'✓ <strong>Correcto</strong>':'✗ <strong>Incorrecto</strong>')+
+    ` — Elegiste <strong>${actionLabel(act)}</strong>, la respuesta correcta es <strong>${actionLabel(correct)}</strong>.`+
+    `<div id="q-mini"></div>`;
+  renderMiniGrid('q-mini',mgCall,mgRaise,mgAllin,hd);
+  setQBtnsDisabled(true);
 }
-function updateHdrStats(){const pct=session.tot>0?Math.round(session.cor/session.tot*100):null;document.getElementById('h-acc').textContent=pct!==null?pct+'%':'–';document.getElementById('h-str').textContent=session.streak;document.getElementById('h-tot').textContent=session.tot;}
-['allin','raise','call','fold'].forEach(a=>{const b=document.getElementById('q-btn-'+a);if(b)b.addEventListener('click',()=>answerAction(a));});
-document.addEventListener('click',e=>{if(e.target&&e.target.id==='q-nxt')nextQ();});
+
+function buildWhy(hd,inRange,s,st,p){
+  const bb=parseInt(st),posLbl=getPosLabel(p,s);
+  if(isPair(hd)){const rank=R.indexOf(hd[0]);if(inRange)return rank<=3?'Par premium, siempre en rango.':rank<=7?`Par medio: suficiente equity con ${bb}BB.`:`Par bajo: fold equity compensa la equity propia.`;return`Par demasiado débil vs el rango de llamada desde ${posLbl} con ${bb}BB.`;}
+  if(isSuited(hd)&&hd[0]==='A')return inRange?'As suited: doble amenaza (par de ases + flush draw).':'Aunque es As suited, el rango de llamada lo domina aquí.';
+  if(s==='3bet'){if(inRange)return isPair(hd)?'Par fuerte, siempre en el rango de valor del 3-bet.':isSuited(hd)&&hd[0]==='A'?'As suited bajo: bluff perfecto con blocker a AA/AK y nut flush draw.':'Mano de valor para 3-bet en este spot.';return'Demasiado especulativa para 3-bet — mejor call o fold.';}
+  if(inRange)return isOpenAllin(st,s)?`Mano con suficiente equity+fold equity para shove desde ${posLbl} con ${bb}BB.`:`Apertura estándar desde ${posLbl} con ${bb}BB.`;
+  return isOpenAllin(st,s)?`Demasiado débil para shove desde ${posLbl} con ${bb}BB — fold directo.`:`Demasiado débil para abrir desde ${posLbl} con ${bb}BB.`;
+}
+
+function updateHdrStats(){
+  const pct=session.tot>0?Math.round(session.cor/session.tot*100):null;
+  document.getElementById('h-acc').textContent=pct!==null?pct+'%':'–';
+  document.getElementById('h-str').textContent=session.streak;
+  document.getElementById('h-tot').textContent=session.tot;
+}
+
+['allin','raise','call','fold'].forEach(a=>{
+  const b=document.getElementById('q-btn-'+a);
+  if(b) b.addEventListener('click',()=>answerAction(a));
+});
+document.addEventListener('click',e=>{
+  if(e.target&&e.target.id==='q-nxt') nextQ();
+});
 document.getElementById('diff-only').addEventListener('change',nextQ);
 document.addEventListener('keydown',e=>{
   if(!document.getElementById('p-quiz').classList.contains('active'))return;
   if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;
   const answered=document.getElementById('q-btn-allin')?.disabled;
   if(answered&&(e.key==='ArrowRight'||e.key==='Enter')){e.preventDefault();nextQ();return;}
-  if(!answered&&e.key==='1'){e.preventDefault();answerAction('allin');}if(!answered&&e.key==='2'){e.preventDefault();answerAction('raise');}
-  if(!answered&&e.key==='3'){e.preventDefault();answerAction('call');}if(!answered&&e.key==='4'){e.preventDefault();answerAction('fold');}
+  if(!answered&&e.key==='1'){e.preventDefault();answerAction('allin');}
+  if(!answered&&e.key==='2'){e.preventDefault();answerAction('raise');}
+  if(!answered&&e.key==='3'){e.preventDefault();answerAction('call');}
+  if(!answered&&e.key==='4'){e.preventDefault();answerAction('fold');}
 });
+
 // ─── BUILDER ──────────────────────────────────────────────────────────────────
 function loadBuild(st,p){
-  const key=sit+'_'+st+'_'+p;const custom=customRanges[key];
+  const key=sit+'_'+st+'_'+p;
+  const custom=customRanges[key];
+  // Build per-color target sets
   let tgtCall=new Set(),tgtRaise=new Set(),tgtAllin=new Set();
-  if(custom){tgtCall=new Set(custom.callRange||[]);tgtRaise=new Set(custom.raiseRange2||[]);tgtAllin=new Set(custom.allinRange||[]);}
-  else if(sit==='open'){if(isOpenAllin(st,sit))tgtAllin=getRange(sit,st,p)||new Set();else if(isOpenMixed(st,sit)){tgtCall=new Set(OP_RAISE[st]?.[p]||[]);tgtAllin=new Set(OP_SHOVE[st]?.[p]||[]);}else tgtRaise=getRange(sit,st,p)||new Set();}
-  else if(sit==='3bet')tgtRaise=getRange(sit,st,p)||new Set();
-  bTarget={sit,st,p,range:new Set([...tgtCall,...tgtRaise,...tgtAllin]),tgtCall,tgtRaise,tgtAllin};
+  if(custom){
+    tgtCall=new Set(custom.callRange||[]);
+    tgtRaise=new Set(custom.raiseRange2||[]);
+    tgtAllin=new Set(custom.allinRange||[]);
+  } else if(sit==='open'){
+    if(isOpenAllin(st,sit)){
+      tgtAllin=getRange(sit,st,p)||new Set();
+    } else if(isOpenMixed(st,sit)){
+      tgtCall=new Set(OP_RAISE[st]?.[p]||[]);
+      tgtAllin=new Set(OP_SHOVE[st]?.[p]||[]);
+    } else {
+      tgtRaise=getRange(sit,st,p)||new Set();
+    }
+  } else if(sit==='3bet'){
+    tgtRaise=getRange(sit,st,p)||new Set();
+  }
+  const tgtAll=new Set([...tgtCall,...tgtRaise,...tgtAllin]);
+  bTarget={sit,st,p,range:tgtAll,tgtCall,tgtRaise,tgtAllin};
   bSel=new Set();bCallSet=new Set();bRaiseSet=new Set();bAllinSet=new Set();
   const verbs={open:'open raise desde','3bet':'3-bet para'};
-  const customBadge=custom?.saved?` <span style="background:#0c2218;color:var(--gbr);border:1px solid var(--green);border-radius:4px;font-size:10px;padding:1px 7px;">● Rango guardado</span>`:'';
-  document.getElementById('b-task').innerHTML=`Construye el rango de <strong>${verbs[sit]} ${getPosLabel(p,sit)}</strong> con stack de <strong>${st}BB</strong>${customBadge}`;
-  document.getElementById('b-fb').className='fb';document.getElementById('b-fb').innerHTML='';document.getElementById('b-leg').style.display='none';
-  buildGrid('bg',null,null,null);document.getElementById('b-cnt').textContent='0';
+  let extra='';
+  if((isOpenAllin(st,sit)||isOpenMixed(st,sit))&&sit==='open') extra=' <span style="color:var(--txt3);font-size:11px">(marca call/raise/allin según corresponda)</span>';
+  const customBadge=custom?.saved?` <span style="background:#0c2218;color:var(--gbr);border:1px solid var(--green);border-radius:4px;font-size:10px;padding:1px 7px;vertical-align:middle;">● Rango guardado</span>`:'';
+  document.getElementById('b-task').innerHTML=`Construye el rango de <strong>${verbs[sit]} ${getPosLabel(p,sit)}</strong> con stack de <strong>${st}BB</strong>${customBadge}${extra}`;
+  document.getElementById('b-fb').className='fb';document.getElementById('b-fb').innerHTML='';
+  document.getElementById('b-leg').style.display='none';
+  buildGrid('bg',null,null,null);
+  document.getElementById('b-cnt').textContent='0';
 }
-function clearBuild(){bSel=new Set();bCallSet=new Set();bRaiseSet=new Set();bAllinSet=new Set();document.querySelectorAll('#bg .cell').forEach(c=>{c.className='cell'+(c.dataset.i==c.dataset.j?' pair':'');});document.getElementById('b-cnt').textContent='0';}
+function clearBuild(){
+  bSel=new Set();bCallSet=new Set();bRaiseSet=new Set();bAllinSet=new Set();
+  document.querySelectorAll('#bg .cell').forEach(c=>{c.className='cell'+(c.dataset.i==c.dataset.j?' pair':'');});
+  document.getElementById('b-cnt').textContent='0';
+}
 function checkBuild(){
-  if(!bTarget)return;const{tgtCall,tgtRaise,tgtAllin,range:tgtAll}=bTarget;
+  if(!bTarget)return;
+  const{tgtCall,tgtRaise,tgtAllin,range:tgtAll}=bTarget;
+  // has colors?
   const hasColors=(tgtCall.size+tgtRaise.size+tgtAllin.size)>0;
-  const stats={call:{correct:0,missing:0,wrongColor:0},raise:{correct:0,missing:0,wrongColor:0},allin:{correct:0,missing:0,wrongColor:0},fold:{extra:0}};
-  document.querySelectorAll('#bg .cell').forEach(c=>{const hd=c.dataset.h;c.className='cell'+(c.dataset.i==c.dataset.j?' pair':'');
-    const inTgt=tgtAll.has(hd),inSel=bSel.has(hd);const myCall=bCallSet.has(hd),myRaise=bRaiseSet.has(hd),myAllin=bAllinSet.has(hd);
-    if(!hasColors){if(inSel&&inTgt){c.classList.add('ci-call');stats.call.correct++;}else if(!inSel&&!inTgt)c.classList.add('co');else if(inSel&&!inTgt){c.classList.add('fp');stats.fold.extra++;}else{c.classList.add('fn');stats.call.missing++;}return;}
-    if(tgtCall.has(hd)){if(myCall){c.classList.add('ci-call');stats.call.correct++;}else if(myRaise||myAllin){c.classList.add('fw');stats.call.wrongColor++;}else{c.classList.add('fn');stats.call.missing++;}}
-    else if(tgtRaise.has(hd)){if(myRaise){c.classList.add('ci-raise');stats.raise.correct++;}else if(myCall||myAllin){c.classList.add('fw');stats.raise.wrongColor++;}else{c.classList.add('fn');stats.raise.missing++;}}
-    else if(tgtAllin.has(hd)){if(myAllin){c.classList.add('ci-allin');stats.allin.correct++;}else if(myCall||myRaise){c.classList.add('fw');stats.allin.wrongColor++;}else{c.classList.add('fn');stats.allin.missing++;}}
-    else{if(inSel){c.classList.add('fp');stats.fold.extra++;}else c.classList.add('co');}});
-  const totalCorrect=stats.call.correct+stats.raise.correct+stats.allin.correct;const f1=tgtAll.size>0?Math.round(totalCorrect/tgtAll.size*100):0;
-  const ok=f1>=80&&stats.call.wrongColor+stats.raise.wrongColor+stats.allin.wrongColor===0&&stats.fold.extra===0;
-  let html=`<strong style="font-size:15px;">Puntuación: ${f1}%</strong>${ok?' <span style="color:var(--gbr)">✓ ¡Perfecto!</span>':''}`;
-  const fb=document.getElementById('b-fb');fb.className='fb show '+(ok?'ok':'bad');fb.innerHTML=html;document.getElementById('b-leg').style.display='flex';
+
+  // per-color counters: correct, missing (fn), wrong-color (fw), extra (fp)
+  const stats={
+    call: {correct:0,missing:0,wrongColor:0,extra:0,label:'Call',color:'#4ade80',bg:'#0f3d20'},
+    raise:{correct:0,missing:0,wrongColor:0,extra:0,label:'Raise',color:'#fecaca',bg:'#5a0a0a'},
+    allin:{correct:0,missing:0,wrongColor:0,extra:0,label:'All-in',color:'#ef4444',bg:'#220000'},
+    fold: {extra:0,label:'Fold (de más)',color:'#fca5a5',bg:''}
+  };
+
+  document.querySelectorAll('#bg .cell').forEach(c=>{
+    const hd=c.dataset.h;
+    c.className='cell'+(c.dataset.i==c.dataset.j?' pair':'');
+
+    const inTgtCall=tgtCall.has(hd),inTgtRaise=tgtRaise.has(hd),inTgtAllin=tgtAllin.has(hd);
+    const inTgt=tgtAll.has(hd);
+    const myCall=bCallSet.has(hd),myRaise=bRaiseSet.has(hd),myAllin=bAllinSet.has(hd);
+    const inSel=bSel.has(hd);
+
+    if(!hasColors){
+      // Simple range: just right/wrong
+      if(inSel&&inTgt){c.classList.add('ci-call');stats.call.correct++;}
+      else if(!inSel&&!inTgt){c.classList.add('co');}
+      else if(inSel&&!inTgt){c.classList.add('fp');stats.fold.extra++;}
+      else{c.classList.add('fn');stats.call.missing++;}
+      return;
+    }
+
+    if(inTgtCall){
+      if(myCall){c.classList.add('ci-call');stats.call.correct++;}
+      else if(myRaise||myAllin){c.classList.add('fw');stats.call.wrongColor++;}
+      else{c.classList.add('fn');stats.call.missing++;}
+    } else if(inTgtRaise){
+      if(myRaise){c.classList.add('ci-raise');stats.raise.correct++;}
+      else if(myCall||myAllin){c.classList.add('fw');stats.raise.wrongColor++;}
+      else{c.classList.add('fn');stats.raise.missing++;}
+    } else if(inTgtAllin){
+      if(myAllin){c.classList.add('ci-allin');stats.allin.correct++;}
+      else if(myCall||myRaise){c.classList.add('fw');stats.allin.wrongColor++;}
+      else{c.classList.add('fn');stats.allin.missing++;}
+    } else {
+      if(inSel){c.classList.add('fp');stats.fold.extra++;}
+      else c.classList.add('co');
+    }
+  });
+
+  // Score: correct / total in range
+  const totalTgt=tgtAll.size;
+  const totalCorrect=stats.call.correct+stats.raise.correct+stats.allin.correct;
+  const totalWrong=stats.call.wrongColor+stats.raise.wrongColor+stats.allin.wrongColor;
+  const totalMissing=stats.call.missing+stats.raise.missing+stats.allin.missing;
+  const f1Score=totalTgt>0?Math.round(totalCorrect/totalTgt*100):0;
+  const ok=f1Score>=80&&totalWrong===0&&stats.fold.extra===0;
+
+  // Build HTML feedback
+  let html=`<strong style="font-size:15px;">Puntuación: ${f1Score}%</strong>`;
+  if(ok) html+=' <span style="color:var(--gbr)">✓ ¡Perfecto!</span>';
+  html+='<div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">';
+
+  if(hasColors){
+    // Per-color rows
+    [{k:'call',tgt:tgtCall},{k:'raise',tgt:tgtRaise},{k:'allin',tgt:tgtAllin}].forEach(({k,tgt})=>{
+      if(tgt.size===0)return;
+      const s=stats[k];
+      const rowOk=s.correct===tgt.size&&s.wrongColor===0;
+      html+=`<div style="background:${s.bg};border:1px solid ${s.color}33;border-radius:6px;padding:8px 12px;">
+        <div style="font-size:12px;font-weight:700;color:${s.color};margin-bottom:4px;">■ ${s.label} <span style="font-weight:400;opacity:.7">(${tgt.size} manos)</span></div>
+        <div style="font-size:12px;display:flex;gap:12px;flex-wrap:wrap;">
+          <span style="color:#4ade80">✓ ${s.correct} correctas</span>`;
+      if(s.missing>0) html+=`<span style="color:var(--abr)">✗ ${s.missing} faltan</span>`;
+      if(s.wrongColor>0) html+=`<span style="color:#fb923c">⚠ ${s.wrongColor} color equivocado</span>`;
+      html+=`</div></div>`;
+    });
+  } else {
+    html+=`<div style="font-size:12px;color:var(--txt2)">✓ ${totalCorrect}/${totalTgt} manos correctas</div>`;
+  }
+
+  if(stats.fold.extra>0){
+    html+=`<div style="background:#2d1050;border:1px solid #7c3aed;border-radius:6px;padding:8px 12px;">
+      <div style="font-size:12px;font-weight:700;color:#c4b5fd;margin-bottom:2px;">■ De más (Fold)</div>
+      <div style="font-size:12px;color:#c4b5fd">✗ ${stats.fold.extra} manos que no deben jugarse</div>
+    </div>`;
+  }
+
+  if(totalMissing===0&&totalWrong===0&&stats.fold.extra===0){
+    html+=`<div style="font-size:12px;color:var(--gbr);text-align:center;padding-top:4px;">🎯 Sin errores</div>`;
+  }
+
+  html+='</div>';
+
+  const fb=document.getElementById('b-fb');
+  fb.className='fb show '+(ok?'ok':'bad');
+  fb.innerHTML=html;
+  document.getElementById('b-leg').style.display='flex';
 }
-function newBuild(){let bSit=sit;if(bSit==='any')bSit=['open','3bet'][Math.floor(Math.random()*2)];const cfg=CFG[bSit];const st=cfg.stacks[Math.floor(Math.random()*cfg.stacks.length)];const p=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];const savedSit=sit;sit=bSit;loadBuild(st,p);sit=savedSit;}
-function currentBuild(){if(sit==='any'||stack==='any'||pos==='any'){newBuild();return;}loadBuild(stack,pos);}
-document.getElementById('b-new').addEventListener('click',newBuild);document.getElementById('b-chk').addEventListener('click',checkBuild);document.getElementById('b-clr').addEventListener('click',clearBuild);
+function newBuild(){
+  let bSit=sit;
+  if(bSit==='any') bSit=['open','3bet'][Math.floor(Math.random()*2)];
+  const cfg=CFG[bSit];
+  const st=cfg.stacks[Math.floor(Math.random()*cfg.stacks.length)];
+  const p=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];
+  const savedSit=sit;sit=bSit;
+  loadBuild(st,p);
+  sit=savedSit;
+}
+function currentBuild(){
+  if(sit==='any'||stack==='any'||pos==='any'){newBuild();return;}
+  loadBuild(stack,pos);
+}
+document.getElementById('b-new').addEventListener('click',newBuild);
+document.getElementById('b-chk').addEventListener('click',checkBuild);
+document.getElementById('b-clr').addEventListener('click',clearBuild);
 
 // ─── STATS ────────────────────────────────────────────────────────────────────
 function renderStats(){
   const pct=session.tot>0?Math.round(session.cor/session.tot*100):null;
-  document.getElementById('st-acc').textContent=pct!==null?pct+'%':'–';document.getElementById('st-best').textContent=session.best;document.getElementById('st-tot').textContent=session.tot;
-  document.getElementById('st-hard').textContent=Object.keys(session.mistakes).filter(hd=>session.mistakes[hd]>=2).length;
+  document.getElementById('st-acc').textContent=pct!==null?pct+'%':'–';
+  document.getElementById('st-best').textContent=session.best;
+  document.getElementById('st-tot').textContent=session.tot;
+  const hard=Object.keys(session.mistakes).filter(hd=>session.mistakes[hd]>=2);
+  document.getElementById('st-hard').textContent=hard.length;
   const sc=document.getElementById('st-sit-acc');sc.innerHTML='';
-  ['open','3bet'].forEach(s=>{const{c,t}=session.sitAcc[s];if(t===0)return;const pp=Math.round(c/t*100);const chip=document.createElement('div');chip.className='acc-chip'+(pp>=75?' g':'');chip.textContent=`${CFG[s].label}: ${pp}% (${t})`;sc.appendChild(chip);});
+  ['open','3bet'].forEach(s=>{
+    const{c,t}=session.sitAcc[s];if(t===0)return;
+    const pp=Math.round(c/t*100);
+    const chip=document.createElement('div');chip.className='acc-chip'+(pp>=75?' g':'');
+    chip.textContent=`${CFG[s].label}: ${pp}% (${t})`;sc.appendChild(chip);
+  });
   const sm=document.getElementById('st-mistakes');sm.innerHTML='';
   const sorted=Object.entries(session.mistakes).sort((a,b)=>b[1]-a[1]).slice(0,10);
   if(sorted.length===0){sm.innerHTML='<div style="color:var(--txt3);font-size:13px">Sin errores todavía</div>';return;}
-  sorted.forEach(([hd,cnt])=>{const el=document.createElement('div');el.className='mi';const col=isPair(hd)?'var(--gold)':isSuited(hd)?'#93c5fd':'var(--txt)';el.innerHTML=`<span class="mh" style="color:${col}">${hd}</span><span class="mc"></span><span class="mn">${cnt}✗</span>`;sm.appendChild(el);});
+  sorted.forEach(([hd,cnt])=>{
+    const el=document.createElement('div');el.className='mi';
+    const col=isPair(hd)?'var(--gold)':isSuited(hd)?'#93c5fd':'var(--txt)';
+    el.innerHTML=`<span class="mh" style="color:${col}">${hd}</span><span class="mc"></span><span class="mn">${cnt}✗</span>`;
+    sm.appendChild(el);
+  });
 }
-document.getElementById('st-rst').addEventListener('click',()=>{session={cor:0,tot:0,streak:0,best:0,mistakes:{},sitAcc:{open:{c:0,t:0},'3bet':{c:0,t:0}},weights:{}};updateHdrStats();renderStats();saveStatsToCloud();});
+document.getElementById('st-rst').addEventListener('click',()=>{
+  session={cor:0,tot:0,streak:0,best:0,mistakes:{},sitAcc:{open:{c:0,t:0},'3bet':{c:0,t:0}},weights:{}};
+  updateHdrStats();renderStats();
+});
 
 // ─── CONTROLS ─────────────────────────────────────────────────────────────────
 function buildStackBtns(){
   const el=document.getElementById('stack-opts');el.innerHTML='';
-  if(sit==='any'){const b=document.createElement('button');b.className='ob au';b.textContent='★ Any';el.appendChild(b);return;}
-  const stacks=CFG[sit].stacks;if(stack!=='any'&&!stacks.includes(stack))stack=stacks[Math.floor(stacks.length/2)];
-  stacks.forEach(s=>{const b=document.createElement('button');b.className='ob'+(s===stack?' '+CFG[sit].activeClass:'');b.textContent=s+'BB';b.addEventListener('click',()=>{stack=s;buildStackBtns();buildPosBtns();refresh();});el.appendChild(b);});
-  const anyB=document.createElement('button');anyB.className='ob'+(stack==='any'?' au':'');anyB.textContent='★ Any';anyB.addEventListener('click',()=>{stack='any';buildStackBtns();refresh();});el.appendChild(anyB);
+  if(sit==='any'){
+    const b=document.createElement('button');
+    b.className='ob au';b.textContent='★ Any';
+    el.appendChild(b);
+    return;
+  }
+  const stacks=CFG[sit].stacks;
+  if(stack!=='any'&&!stacks.includes(stack)) stack=stacks[Math.floor(stacks.length/2)];
+  stacks.forEach(s=>{
+    const b=document.createElement('button');
+    b.className='ob'+(s===stack?' '+CFG[sit].activeClass:'');
+    b.textContent=s+'BB';
+    b.addEventListener('click',()=>{stack=s;buildStackBtns();buildPosBtns();refresh();});
+    el.appendChild(b);
+  });
+  const anyB=document.createElement('button');
+  anyB.className='ob'+(stack==='any'?' au':'');
+  anyB.textContent='★ Any';
+  anyB.addEventListener('click',()=>{stack='any';buildStackBtns();refresh();});
+  el.appendChild(anyB);
 }
 function buildPosBtns(){
   const el=document.getElementById('pos-opts');el.innerHTML='';
-  if(sit==='any'){const b=document.createElement('button');b.className='ob au';b.textContent='★ Any';el.appendChild(b);return;}
-  const positions=CFG[sit].positions;if(pos!=='any'&&!positions.includes(pos))pos=positions.length>=4?positions[3]:positions[0];
-  positions.forEach(p=>{const b=document.createElement('button');b.className='ob'+(p===pos?' '+CFG[sit].activeClass:'');b.textContent=getPosLabel(p);b.addEventListener('click',()=>{pos=p;buildPosBtns();refresh();});el.appendChild(b);});
-  const anyB=document.createElement('button');anyB.className='ob'+(pos==='any'?' au':'');anyB.textContent='★ Any';anyB.addEventListener('click',()=>{pos='any';buildPosBtns();refresh();});el.appendChild(anyB);
+  if(sit==='any'){
+    const b=document.createElement('button');
+    b.className='ob au';b.textContent='★ Any';
+    el.appendChild(b);
+    return;
+  }
+  const positions=CFG[sit].positions;
+  if(pos!=='any'&&!positions.includes(pos)) pos=positions.length>=4?positions[3]:positions[0];
+  positions.forEach(p=>{
+    const b=document.createElement('button');
+    b.className='ob'+(p===pos?' '+CFG[sit].activeClass:'');
+    b.textContent=getPosLabel(p);
+    b.addEventListener('click',()=>{pos=p;buildPosBtns();refresh();});
+    el.appendChild(b);
+  });
+  // Any button for position
+  const anyB=document.createElement('button');
+  anyB.className='ob'+(pos==='any'?' au':'');
+  anyB.textContent='★ Any';
+  anyB.addEventListener('click',()=>{pos='any';buildPosBtns();refresh();});
+  el.appendChild(anyB);
 }
-document.querySelectorAll('#sit-opts .ob').forEach(b=>{b.addEventListener('click',()=>{sit=b.dataset.sit;document.querySelectorAll('#sit-opts .ob').forEach(x=>x.classList.remove('ag','au','ab','at','ap'));if(sit==='any')b.classList.add('au');else b.classList.add(CFG[sit].activeClass);stack='25';pos='BTN';buildStackBtns();buildPosBtns();refresh();});});
+document.querySelectorAll('#sit-opts .ob').forEach(b=>{
+  b.addEventListener('click',()=>{
+    sit=b.dataset.sit;
+    document.querySelectorAll('#sit-opts .ob').forEach(x=>x.classList.remove('ag','au','ab','at','ap'));
+    if(sit==='any') b.classList.add('au');
+    else b.classList.add(CFG[sit].activeClass);
+    stack='25';pos='BTN';
+    buildStackBtns();buildPosBtns();refresh();
+  });
+});
 function refresh(){
-  if(sit==='any'||stack==='any'||pos==='any'){const eg=document.getElementById('eg');if(eg){eg.className='gw';eg.innerHTML='<div style="padding:30px 20px;color:var(--txt3);font-size:13px;text-align:center;line-height:1.8"><span style="font-size:22px;display:block;margin-bottom:8px">★</span>Modo aleatorio activo</div>';}}
-  else renderExplorer();
-  nextQ();if(document.getElementById('p-stats').classList.contains('active'))renderStats();if(document.getElementById('p-builder').classList.contains('active'))currentBuild();
+  if(sit==='any'||stack==='any'||pos==='any'){
+    const eg=document.getElementById('eg');
+    if(eg){eg.className='gw';eg.innerHTML='<div style="padding:30px 20px;color:var(--txt3);font-size:13px;text-align:center;line-height:1.8"><span style="font-size:22px;display:block;margin-bottom:8px">★</span>Modo aleatorio activo<br><span style="font-size:11px;opacity:.7">El quiz y el constructor usarán<br>combinaciones aleatorias</span></div>';}
+  } else {
+    renderExplorer();
+  }
+  nextQ();
+  if(document.getElementById('p-stats').classList.contains('active'))renderStats();
+  if(document.getElementById('p-builder').classList.contains('active'))currentBuild();
 }
-document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.getElementById('p-'+t.dataset.tab).classList.add('active');if(t.dataset.tab==='stats')renderStats();if(t.dataset.tab==='builder')currentBuild();});});
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('p-'+t.dataset.tab).classList.add('active');
+    if(t.dataset.tab==='stats')renderStats();
+    if(t.dataset.tab==='builder')currentBuild();
+  });
+});
 
 // ─── BRUSH BUTTONS ────────────────────────────────────────────────────────────
-['call','raise','allin','erase'].forEach(mode=>{document.getElementById('brush-'+mode).addEventListener('click',()=>{eBrush=mode;document.querySelectorAll('#brush-row .brush-btn').forEach(b=>b.classList.remove('active'));document.getElementById('brush-'+mode).classList.add('active');});});
-['allin','raise','call','erase'].forEach(mode=>{const btn=document.getElementById('b-brush-'+mode);if(!btn)return;btn.addEventListener('click',()=>{bBrush=mode;document.querySelectorAll('#p-builder .brush-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');});});
+['call','raise','allin','erase'].forEach(mode=>{
+  document.getElementById('brush-'+mode).addEventListener('click',()=>{
+    eBrush=mode;
+    document.querySelectorAll('.brush-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('brush-'+mode).classList.add('active');
+  });
+});
 
-// ─── DRAG: EXPLORER ───────────────────────────────────────────────────────────
-(()=>{const el=document.getElementById('eg');let active=false;
-  const applyBrush=target=>{const c=target?.closest?.('.cell');if(!c)return;const hd=c.dataset.h;
+// ─── DRAG HOOKS ───────────────────────────────────────────────────────────────
+// Explorer: brush-aware (raise/shove/erase)
+(()=>{
+  const el=document.getElementById('eg');
+  let active=false;
+  const applyBrush=target=>{
+    const c=target?.closest?.('.cell');if(!c)return;
+    const hd=c.dataset.h;
+    const mixed=isOpenMixed(stack);
     const clearCell=()=>{eCallSet.delete(hd);eRaiseSet.delete(hd);eAllinSet.delete(hd);eRange.delete(hd);c.classList.remove('on','shv','ain');};
-    if(eBrush==='erase')clearCell();else if(eBrush==='call'){clearCell();eCallSet.add(hd);eRange.add(hd);c.classList.add('on');}
-    else if(eBrush==='raise'){clearCell();eRaiseSet.add(hd);eRange.add(hd);c.classList.add('shv');}
-    else if(eBrush==='allin'){clearCell();eAllinSet.add(hd);eRange.add(hd);c.classList.add('ain');}
-    customRanges[getCKey()]={callRange:new Set(eCallSet),raiseRange2:new Set(eRaiseSet),allinRange:new Set(eAllinSet),range:new Set(eRange),saved:false};updateEStats();};
-  el.addEventListener('mousedown',e=>{const c=e.target.closest('.cell');if(!c)return;e.preventDefault();active=true;applyBrush(c);});
-  el.addEventListener('mouseover',e=>{if(active)applyBrush(e.target);});document.addEventListener('mouseup',()=>{active=false;});
-  el.addEventListener('touchstart',e=>{const t=e.touches[0];const c=document.elementFromPoint(t.clientX,t.clientY)?.closest?.('.cell');if(!c)return;e.preventDefault();active=true;applyBrush(c);},{passive:false});
-  el.addEventListener('touchmove',e=>{if(!active)return;e.preventDefault();applyBrush(document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY));},{passive:false});
-  el.addEventListener('touchend',()=>{active=false;});})();
+    if(eBrush==='erase'){
+      clearCell();
+    } else if(eBrush==='call'){
+      clearCell();eCallSet.add(hd);eRange.add(hd);c.classList.add('on');
+    } else if(eBrush==='raise'){
+      clearCell();eRaiseSet.add(hd);eRange.add(hd);c.classList.add('shv');
+    } else if(eBrush==='allin'){
+      clearCell();eAllinSet.add(hd);eRange.add(hd);c.classList.add('ain');
+    }
+    customRanges[getCKey()]={callRange:new Set(eCallSet),raiseRange2:new Set(eRaiseSet),allinRange:new Set(eAllinSet),range:new Set(eRange),saved:false};
+    updateEStats();
+  };
+  el.addEventListener('mousedown',e=>{
+    const c=e.target.closest('.cell');if(!c)return;
+    e.preventDefault();active=true;
+    // for non-mixed simple toggle: determine turnOn from first cell
+    el._turnOn=!eRange.has(c.dataset.h); // for non-mixed toggle
+    applyBrush(c);
+  });
+  el.addEventListener('mouseover',e=>{if(active)applyBrush(e.target);});
+  document.addEventListener('mouseup',()=>{active=false;});
+  el.addEventListener('touchstart',e=>{
+    const t=e.touches[0];const c=document.elementFromPoint(t.clientX,t.clientY)?.closest?.('.cell');
+    if(!c)return;e.preventDefault();active=true;el._turnOn=!eRange.has(c.dataset.h);applyBrush(c);
+  },{passive:false});
+  el.addEventListener('touchmove',e=>{
+    if(!active)return;e.preventDefault();
+    applyBrush(document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY));
+  },{passive:false});
+  el.addEventListener('touchend',()=>{active=false;});
+})();
 
-// ─── DRAG: BUILDER ────────────────────────────────────────────────────────────
-(()=>{const el=document.getElementById('bg');let active=false;
-  const applyBBrush=target=>{const c=target?.closest?.('.cell');if(!c)return;const hd=c.dataset.h;
+// Builder: brush-aware
+(()=>{
+  const el=document.getElementById('bg');
+  let active=false;
+  const applyBBrush=target=>{
+    const c=target?.closest?.('.cell');if(!c)return;
+    const hd=c.dataset.h;
     const clearCell=()=>{bCallSet.delete(hd);bRaiseSet.delete(hd);bAllinSet.delete(hd);bSel.delete(hd);c.classList.remove('on','shv','ain','ci-call','ci-raise','ci-allin','fp','fn','fw','co');};
-    if(bBrush==='erase')clearCell();else if(bBrush==='call'){clearCell();bCallSet.add(hd);bSel.add(hd);c.classList.add('on');}
+    if(bBrush==='erase'){clearCell();}
+    else if(bBrush==='call'){clearCell();bCallSet.add(hd);bSel.add(hd);c.classList.add('on');}
     else if(bBrush==='raise'){clearCell();bRaiseSet.add(hd);bSel.add(hd);c.classList.add('shv');}
     else if(bBrush==='allin'){clearCell();bAllinSet.add(hd);bSel.add(hd);c.classList.add('ain');}
-    document.getElementById('b-cnt').textContent=bSel.size;};
+    document.getElementById('b-cnt').textContent=bSel.size;
+  };
   el.addEventListener('mousedown',e=>{const c=e.target.closest('.cell');if(!c)return;e.preventDefault();active=true;applyBBrush(c);});
-  el.addEventListener('mouseover',e=>{if(active)applyBBrush(e.target);});document.addEventListener('mouseup',()=>{active=false;});
+  el.addEventListener('mouseover',e=>{if(active)applyBBrush(e.target);});
+  document.addEventListener('mouseup',()=>{active=false;});
   el.addEventListener('touchstart',e=>{const t=e.touches[0];const c=document.elementFromPoint(t.clientX,t.clientY)?.closest?.('.cell');if(!c)return;e.preventDefault();active=true;applyBBrush(c);},{passive:false});
   el.addEventListener('touchmove',e=>{if(!active)return;e.preventDefault();applyBBrush(document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY));},{passive:false});
-  el.addEventListener('touchend',()=>{active=false;});})();
+  el.addEventListener('touchend',()=>{active=false;});
+})();
+
+// Builder brush buttons
+['allin','raise','call','erase'].forEach(mode=>{
+  const btn=document.getElementById('b-brush-'+mode);
+  if(!btn)return;
+  btn.addEventListener('click',()=>{
+    bBrush=mode;
+    document.querySelectorAll('#p-builder .brush-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
 
 // ─── GRID RESIZE ──────────────────────────────────────────────────────────────
-function updateCellSize(){const wrap=document.getElementById('eg-wrap');if(!wrap)return;const available=wrap.closest(".exp-wrap")?.getBoundingClientRect().width||wrap.getBoundingClientRect().width;const infoW=document.querySelector(".info-col")?.getBoundingClientRect().width||340;const usable=available-infoW-40;if(available<10)return;const cs=Math.floor(usable/15);document.documentElement.style.setProperty('--cs',Math.min(Math.max(cs,20),70)+'px');}
-const _ro=new ResizeObserver(updateCellSize);_ro.observe(document.getElementById('eg-wrap')||document.body);
-window.addEventListener('resize',updateCellSize);document.addEventListener('DOMContentLoaded',updateCellSize);
+function updateCellSize(){
+  const wrap=document.getElementById('eg-wrap');
+  if(!wrap) return;
+  const available=wrap.closest(".exp-wrap")?.getBoundingClientRect().width||wrap.getBoundingClientRect().width;
+  const infoW=document.querySelector(".info-col")?.getBoundingClientRect().width||340;
+  const usable=available-infoW-40;
+  if(available<10) return;
+  // 14 data cols + 1 label col = 15 units
+  const cs=Math.floor(usable/15);
+  const clamped=Math.min(Math.max(cs,20),70);
+  document.documentElement.style.setProperty('--cs',clamped+'px');
+}
+const _ro=new ResizeObserver(updateCellSize);
+_ro.observe(document.getElementById('eg-wrap')||document.body);
+window.addEventListener('resize',updateCellSize);
+document.addEventListener('DOMContentLoaded',updateCellSize);
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
+// Mark open as active sit button
 document.querySelector('[data-sit="open"]').classList.add('ab');
-buildStackBtns();buildPosBtns();renderExplorer();nextQ();updateAuthUI();
-// Check for existing Supabase session
-checkSession();
+buildStackBtns();buildPosBtns();renderExplorer();nextQ();
 </script>
 </body>
 </html>
