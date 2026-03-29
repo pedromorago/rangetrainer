@@ -940,15 +940,36 @@ function lsLoad(){
     });
   }catch(e){}
 }
-function lsPersist(){
-  try{
-    const obj={};
-    Object.keys(customRanges).forEach(k=>{
-      const c=customRanges[k];
-      if(c.saved) obj[k]={c:[...(c.callRange||[])],r:[...(c.raiseRange2||[])],a:[...(c.allinRange||[])]};
+async function lsPersist() {
+  try {
+    const obj = {};
+    Object.keys(customRanges).forEach(k => {
+      const c = customRanges[k];
+      if (c.saved) {
+        obj[k] = {
+          c: [...(c.callRange || [])],
+          r: [...(c.raiseRange2 || [])],
+          a: [...(c.allinRange || [])]
+        };
+      }
     });
-    localStorage.setItem(LS_KEY,JSON.stringify(obj));
-  }catch(e){}
+
+    // 1. Guardado local (siempre se hace)
+    localStorage.setItem(LS_KEY, JSON.stringify(obj));
+
+    // 2. Guardado en la Nube (si hay sesión de Google)
+    const { data: { session: currentSession } } = await supabase.auth.getSession();
+    if (currentSession) {
+      await supabase.from('user_data').upsert({ 
+        user_id: currentSession.user.id, 
+        range_data: obj, 
+        stats: session, // Guarda la precisión, rachas y errores del Quiz
+        updated_at: new Date().toISOString()
+      });
+    }
+  } catch (e) {
+    console.error("Error guardando:", e);
+  }
 }
 lsLoad();
 
