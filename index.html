@@ -422,71 +422,6 @@ const SUPABASE_URL = 'https://grdmhcdgaqbfpnimcrxr.supabase.co'
 const SUPABASE_KEY = 'sb_publishable_fsMayEY8ayyb197VDgwBDQ_PHhTZQnT' 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
-// 2. Crear la interfaz de Login y cargar datos
-async function setupAuth() {
-  // Comprobamos si el usuario ya está logueado (le llamamos currentSession para no chocar con la variable 'session' de tus stats)
-  const { data: { session: currentSession } } = await supabase.auth.getSession()
-  
-  // Buscamos la cabecera para poner el botón
-  const hdrStats = document.querySelector('.hdr-stats');
-  const authDiv = document.createElement('div');
-  authDiv.style.display = 'flex';
-  authDiv.style.alignItems = 'center';
-  authDiv.style.marginLeft = '16px';
-  authDiv.style.paddingLeft = '16px';
-  authDiv.style.borderLeft = '1px solid var(--b1)';
-  hdrStats.appendChild(authDiv);
-
-  if (currentSession) {
-    // SI ESTÁ LOGUEADO: Mostramos su email y el botón de Salir
-    const userEmail = currentSession.user.email;
-    authDiv.innerHTML = `
-      <span style="font-size:11px; color:var(--gold); margin-right:10px; font-weight:600;">${userEmail}</span>
-      <button class="ob" id="btn-logout" style="border-color:var(--red); color:var(--rbr);">Salir</button>
-    `;
-    document.getElementById('btn-logout').onclick = async () => {
-      await supabase.auth.signOut();
-      window.location.reload(); // Recarga la página al salir
-    };
-
-    // 👇 ESTO ES LO NUEVO: DESCARGAMOS TUS DATOS DE LA NUBE 👇
-    const { data, error } = await supabase
-      .from('user_data')
-      .select('range_data, stats')
-      .eq('user_id', currentSession.user.id)
-      .single();
-      
-    if (data) {
-      // Metemos los datos de la nube en las variables de tu juego
-      if (data.range_data) Object.assign(customRanges, data.range_data);
-      if (data.stats) Object.assign(session, data.stats); 
-      
-      // Actualizamos los números en pantalla
-      if (typeof updateHdrStats === 'function') updateHdrStats();
-      if (typeof renderStats === 'function') renderStats();
-      if (typeof renderExplorer === 'function') renderExplorer();
-    }
-    // 👆 FIN DE LO NUEVO 👆
-
-  } else {
-    // SI NO ESTÁ LOGUEADO: Mostramos el botón de Google
-    authDiv.innerHTML = `
-      <button class="ob au" id="btn-google" style="display:flex; align-items:center; gap:6px;">
-        <svg style="width:14px;height:14px;" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-        Entrar con Google
-      </button>
-    `;
-    document.getElementById('btn-google').onclick = async () => {
-      await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: window.location.origin }
-      });
-    };
-  }
-}
-
-setupAuth();
-
 // ─── HAND UTILS ───────────────────────────────────────────────────────────────
 const R=['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
 const ALL_HANDS=[];
@@ -535,11 +470,8 @@ PF['20'].SB=new Set([...PF['20'].BTN,...mk('K3s K2s Q5s Q4s J5s T5s 95s 84s 73s 
 // OPENING – raise/fold (25BB+) y raise+shove (15/20BB)
 // OP_RAISE = manos que abres a 2.5x (fold a 3-bet o call si son premium)
 // OP_SHOVE = manos que abres directamente all-in para negar fold equity al 3-bettor
-// Para 15/20BB: AMBAS se cuentan como "en rango" en el quiz.
-// Para 25BB+: solo OP_RAISE, sin open-shove.
 const OP_RAISE={}, OP_SHOVE={};
 
-// ── 12BB (mixed) ─────────────────────────────────────────────────────────────
 OP_RAISE['12']={UTG:mk('66 55 44 33 22 A9s A8s A7s A6s A5s A4s A3s A2s KJs KTs K9s QJs QTs JTs T9s 98s 87s 76s A9o A8o KJo KTo QJo QTo JTo'),MP:null,CO:null,BTN:null,SB:null};
 OP_RAISE['12'].MP=new Set([...OP_RAISE['12'].UTG,...mk('K8s Q9s J9s T8s 97s 86s 65s 54s Q9o T9o 98o')]);
 OP_RAISE['12'].CO=new Set([...OP_RAISE['12'].MP,...mk('K7s K6s K5s Q8s J8s T7s 96s 85s 74s 63s A7o A6o A5o A4o K9o J9o 76o 65o')]);
@@ -551,7 +483,6 @@ OP_SHOVE['12'].CO=new Set([...OP_SHOVE['12'].MP,...mk('66 55 A8s A7s A6s K8s QTs
 OP_SHOVE['12'].BTN=new Set([...OP_SHOVE['12'].CO,...mk('44 33 22 K7s K6s K5s Q8s J8s T7s 97s 86s 65s 54s A4o A3o A2o K9o Q9o J9o JTo 98o 87o 76o')]);
 OP_SHOVE['12'].SB=new Set([...OP_SHOVE['12'].CO,...mk('44 33 22 K5s K4s K3s Q6s Q5s J7s J6s T6s 96s 85s A4o A3o A2o KTo K9o Q9o J9o T9o JTo 98o')]);
 
-// ── 14BB (mixed) ─────────────────────────────────────────────────────────────
 OP_RAISE['14']={UTG:mk('77 66 55 A9s A8s A7s A6s A5s A4s A3s A2s KJs KTs K9s QJs QTs JTs T9s 98s 87s 76s A9o A8o KJo KTo QJo QTo JTo'),MP:null,CO:null,BTN:null,SB:null};
 OP_RAISE['14'].MP=new Set([...OP_RAISE['14'].UTG,...mk('44 33 22 K8s Q9s J9s T8s 97s 86s 65s 54s Q9o T9o 98o')]);
 OP_RAISE['14'].CO=new Set([...OP_RAISE['14'].MP,...mk('K7s K6s K5s Q8s J8s T7s 96s 85s 74s 63s A7o A6o A5o A4o K9o J9o 76o 65o')]);
@@ -563,7 +494,6 @@ OP_SHOVE['14'].CO=new Set([...OP_SHOVE['14'].MP,...mk('66 55 A8s A7s A6s K8s QTs
 OP_SHOVE['14'].BTN=new Set([...OP_SHOVE['14'].CO,...mk('44 33 22 K7s K6s K5s Q8s J8s T7s 97s 86s 65s 54s A4o A3o A2o K9o Q9o J9o JTo 98o 87o 76o')]);
 OP_SHOVE['14'].SB=new Set([...OP_SHOVE['14'].CO,...mk('44 33 22 K5s K4s K3s Q6s Q5s J7s J6s T6s 96s 85s A4o A3o A2o KTo K9o Q9o J9o T9o JTo 98o')]);
 
-// ── 17BB (mixed) ─────────────────────────────────────────────────────────────
 OP_RAISE['17']={UTG:mk('88 77 66 A9s A8s A7s A6s A5s A4s A3s A2s KJs KTs K9s QJs JTs T9s 98s 87s 76s A9o A8o KJo KTo QJo QTo JTo'),MP:null,CO:null,BTN:null,SB:null};
 OP_RAISE['17'].MP=new Set([...OP_RAISE['17'].UTG,...mk('55 44 33 22 K8s Q9s J9s T8s 97s 86s 65s 54s A8o A7o Q9o T9o 98o')]);
 OP_RAISE['17'].CO=new Set([...OP_RAISE['17'].MP,...mk('K7s K6s Q8s J8s T7s 96s 85s 75s 74s A7o A6o K9o J9o 87o 76o 65o')]);
@@ -575,7 +505,6 @@ OP_SHOVE['17'].CO=new Set([...OP_SHOVE['17'].MP,...mk('66 55 A8s A7s A6s K8s QTs
 OP_SHOVE['17'].BTN=new Set([...OP_SHOVE['17'].CO,...mk('44 33 22 K7s K6s K5s Q8s J8s T7s 97s 86s 65s 54s A4o A3o A2o K9o Q9o J9o JTo 98o 87o 76o')]);
 OP_SHOVE['17'].SB=new Set([...OP_SHOVE['17'].CO,...mk('44 33 22 K5s K4s K3s Q6s Q5s J7s J6s T6s 96s 85s A4o A3o A2o KTo K9o Q9o J9o T9o JTo 98o')]);
 
-// 15BB raise range (hands too speculative to open-shove; you raise/fold or raise/call)
 OP_RAISE['15']={
   UTG:mk('77 66 55 A9s A8s A7s A6s A5s A4s A3s A2s KJs KTs K9s QJs QTs JTs T9s 98s 87s 76s 65s A9o A8o KJo KTo QJo QTo JTo'),
   MP:null,CO:null,BTN:null,SB:null
@@ -584,8 +513,6 @@ OP_RAISE['15'].MP=new Set([...OP_RAISE['15'].UTG,...mk('44 33 22 K8s Q9s J9s T8s
 OP_RAISE['15'].CO=new Set([...OP_RAISE['15'].MP,...mk('K7s K6s K5s Q8s J8s T7s 96s 85s 74s 63s A7o A6o A5o A4o K9o J9o 76o 65o')]);
 OP_RAISE['15'].BTN=new Set([...OP_RAISE['15'].CO,...mk('K4s K3s K2s Q7s Q6s Q5s J7s J6s T6s T5s 95s 84s 73s 53s A3o A2o K8o K7o Q8o J8o T8o 97o 86o 75o 64o 54o')]);
 OP_RAISE['15'].SB=new Set([...OP_RAISE['15'].CO,...mk('K3s K2s Q5s Q4s J5s T5s 95s 84s A5o A4o A3o A2o K7o K6o Q7o J7o T7o 86o 75o 64o')]);
-
-// 15BB open-shove range (hands strong enough to just go all-in directly)
 OP_SHOVE['15']={
   UTG:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs KQs KJs AKo AQo AJo ATo KQo'),
   MP:null,CO:null,BTN:null,SB:null
@@ -595,7 +522,6 @@ OP_SHOVE['15'].CO=new Set([...OP_SHOVE['15'].MP,...mk('77 66 55 A8s A7s A6s K8s 
 OP_SHOVE['15'].BTN=new Set([...OP_SHOVE['15'].CO,...mk('44 33 22 K7s K6s K5s Q8s J8s T7s 97s 86s 65s 54s A4o A3o A2o K9o Q9o J9o JTo 98o 87o 76o')]);
 OP_SHOVE['15'].SB=new Set([...OP_SHOVE['15'].CO,...mk('44 33 22 K5s K4s K3s Q6s Q5s J7s J6s T6s 96s 85s A4o A3o A2o KTo K9o Q9o J9o T9o JTo 98o')]);
 
-// 20BB raise range
 OP_RAISE['20']={
   UTG:mk('88 77 66 A9s A8s A7s A6s A5s A4s A3s A2s KJs KTs K9s QJs JTs T9s 98s 87s 76s A9o A8o KJo KTo QJo QTo JTo'),
   MP:null,CO:null,BTN:null,SB:null
@@ -604,8 +530,6 @@ OP_RAISE['20'].MP=new Set([...OP_RAISE['20'].UTG,...mk('55 44 33 22 K8s Q9s J9s 
 OP_RAISE['20'].CO=new Set([...OP_RAISE['20'].MP,...mk('K7s K6s Q8s J8s T7s 96s 85s 75s 74s A7o A6o K9o J9o 87o 76o 65o')]);
 OP_RAISE['20'].BTN=new Set([...OP_RAISE['20'].CO,...mk('K5s K4s K3s Q7s Q6s J7s J6s T6s T5s 95s 84s 73s 63s 53s A6o A5o A4o A3o A2o K8o K7o Q8o J8o T8o 97o 86o 75o 64o 54o')]);
 OP_RAISE['20'].SB=new Set([...OP_RAISE['20'].CO,...mk('K3s K2s Q5s Q4s J5s T5s 95s 84s A5o A4o A3o A2o K7o K6o Q7o J7o T7o 86o 75o 64o')]);
-
-// 20BB open-shove range
 OP_SHOVE['20']={
   UTG:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs KQs AKo AQo AJo ATo KQo'),
   MP:null,CO:null,BTN:null,SB:null
@@ -615,7 +539,6 @@ OP_SHOVE['20'].CO=new Set([...OP_SHOVE['20'].MP,...mk('66 55 A8s A7s A6s K8s Q9s
 OP_SHOVE['20'].BTN=new Set([...OP_SHOVE['20'].CO,...mk('44 33 22 K7s K6s K5s Q8s J8s T7s 97s 86s 76s 65s A5o A4o A3o A2o K9o Q9o J9o T9o 98o 87o 76o JTo')]);
 OP_SHOVE['20'].SB=new Set([...OP_SHOVE['20'].CO,...mk('44 33 22 K4s K3s Q6s Q5s J7s T6s 96s 85s A4o A3o A2o KTo K9o Q9o J9o T9o 98o JTo')]);
 
-// OPENING (pure raise/fold, 25BB+) – stored in OP
 const OP={};
 OP['25']={UTG:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A5s A4s A3s A2s KQs KJs KTs QJs JTs T9s 98s 87s 76s AKo AQo AJo ATo KQo KJo'),MP:null,CO:null,BTN:null,SB:null};
 OP['25'].MP=new Set([...OP['25'].UTG,...mk('66 55 A8s A7s A6s K9s Q9s J9s T8s 97s 65s 54s A9o A8o KTo QJo QTo JTo T9o 98o')]);
@@ -648,16 +571,12 @@ OP['100'].CO=new Set([...OP['100'].MP,...mk('55 44 33 22 K8s K7s Q8s J8s T7s 86s
 OP['100'].BTN=new Set([...OP['100'].CO,...mk('K6s K5s K4s Q7s Q6s J7s J6s T6s T5s 96s 85s 74s A6o A5o A4o A3o A2o K8o K7o Q8o J8o T8o 97o 87o 76o 65o')]);
 OP['100'].SB=new Set([...OP['100'].CO,...mk('K3s K2s Q5s Q4s J5s T5s 95s A5o A4o A3o A2o K6o K5o Q7o J7o T7o 86o 75o')]);
 
-// CALL RANGES
 const CL={};
 CL['BTN']={'8':mk('AA KK QQ JJ TT 99 88 77 66 55 44 AKs AQs AJs ATs A9s A8s A7s A5s A4s KQs KJs KTs QJs JTs T9s AKo AQo AJo ATo A9o KQo'),'10':mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A9s A8s A5s KQs KJs QJs JTs AKo AQo AJo ATo KQo'),'15':mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs KQs AKo AQo AJo KQo'),'20':mk('AA KK QQ JJ TT 99 AKs AQs KQs AKo AQo')};
 CL['SB']={'8':mk('AA KK QQ JJ TT 99 88 77 66 55 44 33 22 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs K9s QJs JTs T9s 98s AKo AQo AJo ATo A9o A8o KQo KJo KTo QJo'),'10':mk('AA KK QQ JJ TT 99 88 77 66 55 44 33 AKs AQs AJs ATs A9s A8s A7s A5s A4s A3s KQs KJs KTs QJs JTs T9s AKo AQo AJo ATo A9o A8o KQo KJo'),'15':mk('AA KK QQ JJ TT 99 88 77 66 55 AKs AQs AJs ATs A9s A7s A6s A5s KQs KJs QJs JTs AKo AQo AJo ATo A9o KQo KJo'),'20':mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A8s A5s KQs QJs AKo AQo AJo ATo KQo')};
 CL['CO']={'8':mk('AA KK QQ JJ TT 99 88 77 66 55 AKs AQs AJs ATs A9s A7s A5s A4s KQs KJs QJs JTs AKo AQo AJo ATo KQo'),'10':mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A8s A5s KQs QJs AKo AQo AJo KQo'),'15':mk('AA KK QQ JJ TT 99 88 AKs AQs AJs A5s KQs AKo AQo AJo'),'20':mk('AA KK QQ JJ TT 99 AKs AQs A5s AKo AQo')};
 
-// 3-BET RANGES
 const TB={};
-
-// ── 100BB ────────────────────────────────────────────────────────────────────
 TB['100']={
   CO_UTG:mk('AA KK QQ JJ AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo KQo'),
   CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),
@@ -674,8 +593,6 @@ TB['100']={
   BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs T9s 98s AKo AQo AJo ATo A9o KQo KJo QJo'),
   BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs T9s 98s 87s AKo AQo AJo ATo A9o A8o KQo KJo KTo QJo')
 };
-
-// ── 50BB ─────────────────────────────────────────────────────────────────────
 TB['50']={
   CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A3s A2s KQs AKo AQo KQo'),
   CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo KQo'),
@@ -692,8 +609,6 @@ TB['50']={
   BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A8s A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs T9s AKo AQo AJo ATo A9o KQo KJo QJo'),
   BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs T9s 98s AKo AQo AJo ATo A9o A8o KQo KJo KTo QJo')
 };
-
-// ── 40BB ─────────────────────────────────────────────────────────────────────
 TB['40']={
   CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo KQo'),
   CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),
@@ -710,8 +625,6 @@ TB['40']={
   BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),
   BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs T9s AKo AQo AJo ATo A9o A8o KQo KJo QJo')
 };
-
-// ── 30BB ─────────────────────────────────────────────────────────────────────
 TB['30']={
   CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),
   CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
@@ -728,8 +641,6 @@ TB['30']={
   BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),
   BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
 };
-
-// ── 25BB ─────────────────────────────────────────────────────────────────────
 TB['25']={
   CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A2s KQs AKo AQo'),
   CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A2s KQs AKo AQo AJo'),
@@ -746,8 +657,6 @@ TB['25']={
   BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),
   BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
 };
-
-// ── 5BB (3-bet = shove, ultra tight) ────────────────────────────────────────
 TB['5']={
   CO_UTG:mk('AA KK AKs AKo'),
   CO_MP: mk('AA KK QQ AKs AQs AKo AQo'),
@@ -764,8 +673,6 @@ TB['5']={
   BB_BTN:mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo KJo'),
   BB_SB: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo QJo')
 };
-
-// ── 8BB (3-bet = shove) ───────────────────────────────────────────────────────
 TB['8']={
   CO_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),
   CO_MP: mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
@@ -782,8 +689,6 @@ TB['8']={
   BB_BTN:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
   BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo KQo KJo QJo')
 };
-
-// ── 12BB (3-bet = shove) ──────────────────────────────────────────────────────
 TB['12']={
   CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
   CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
@@ -800,8 +705,6 @@ TB['12']={
   BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo QJo'),
   BB_SB: mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A9s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
 };
-
-// ── 14BB (3-bet = shove) ──────────────────────────────────────────────────────
 TB['14']={
   CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
   CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
@@ -818,8 +721,6 @@ TB['14']={
   BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),
   BB_SB: mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
 };
-
-// ── 17BB (3-bet = shove or small 3-bet) ───────────────────────────────────────
 TB['17']={
   CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
   CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
@@ -835,78 +736,6 @@ TB['17']={
   BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
   BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),
   BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
-};
-
-// ── 10BB (3-bet = shove, rango muy tight) ────────────────────────────────────
-TB['10']={
-  CO_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),
-  CO_MP: mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
-  BTN_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),
-  BTN_MP: mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
-  BTN_CO: mk('AA KK QQ JJ TT AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
-  SB_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),
-  SB_MP: mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
-  SB_CO: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
-  SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo KJo'),
-  BB_UTG:mk('AA KK QQ AKs AQs A5s A2s KQs AKo AQo'),
-  BB_MP: mk('AA KK QQ JJ AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
-  BB_CO: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
-  BB_BTN:mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo QJo'),
-  BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
-};
-
-// ── 15BB (3-bet = shove) ──────────────────────────────────────────────────────
-TB['15']={
-  CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
-  CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
-  BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
-  BTN_MP: mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo KQo'),
-  BTN_CO: mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
-  SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
-  SB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
-  SB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
-  SB_BTN:mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
-  BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
-  BB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
-  BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
-  BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo QJo'),
-  BB_SB: mk('AA KK QQ JJ TT 99 88 77 66 AKs AQs AJs ATs A9s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
-};
-
-// ── 20BB ─────────────────────────────────────────────────────────────────────
-TB['20']={
-  CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
-  CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
-  BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
-  BTN_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs QJs AKo AQo AJo KQo'),
-  BTN_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
-  SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
-  SB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo'),
-  SB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
-  SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
-  BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
-  BB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A3s A2s KQs AKo AQo AJo'),
-  BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs AKo AQo AJo ATo KQo'),
-  BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),
-  BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs AKo AQo AJo ATo A9o KQo KJo QJo')
-};
-
-// ── 35BB ─────────────────────────────────────────────────────────────────────
-TB['35']={
-  CO_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo KQo'),
-  CO_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),
-  BTN_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
-  BTN_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs QJs AKo AQo AJo KQo'),
-  BTN_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo KJo'),
-  SB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
-  SB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),
-  SB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),
-  SB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo A9o KQo KJo'),
-  BB_UTG:mk('AA KK QQ JJ AKs AQs A5s A4s A2s KQs AKo AQo'),
-  BB_MP: mk('AA KK QQ JJ TT AKs AQs AJs A5s A4s A2s KQs AKo AQo AJo KQo'),
-  BB_CO: mk('AA KK QQ JJ TT 99 AKs AQs AJs ATs A5s A4s A3s A2s KQs KJs QJs AKo AQo AJo ATo KQo'),
-  BB_BTN:mk('AA KK QQ JJ TT 99 88 AKs AQs AJs ATs A7s A6s A5s A4s A3s A2s KQs KJs QJs JTs AKo AQo AJo ATo KQo KJo QJo'),
-  BB_SB: mk('AA KK QQ JJ TT 99 88 77 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs QJs JTs T9s AKo AQo AJo ATo A9o A8o KQo KJo KTo QJo')
 };
 
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
@@ -937,62 +766,6 @@ function getShoveRange(st,p,s){
   return OP_SHOVE[st]?.[p]||null;
 }
 
-// ─── PERSISTENT SAVE (localStorage) ──────────────────────────────────────────
-const LS_KEY='rtrainer_v2';
-// customRanges[key] = { range: Set, saved: bool }
-const customRanges={};
-
-function lsLoad(){
-  try{
-    const raw=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
-    Object.keys(raw).forEach(k=>{
-      const v=raw[k];
-      if(Array.isArray(v)){
-        // very old format – treat all as call (green)
-        const cl=new Set(v);
-        customRanges[k]={range:cl,callRange:cl,raiseRange2:new Set(),allinRange:new Set(),saved:true};
-      } else {
-        const cl=new Set(v.c||[]);
-        const ra=new Set(v.r||[]);
-        const ai=new Set(v.a||[]);
-        customRanges[k]={range:new Set([...cl,...ra,...ai]),callRange:cl,raiseRange2:ra,allinRange:ai,saved:true};
-      }
-    });
-  }catch(e){}
-}
-async function lsPersist() {
-  try {
-    const obj = {};
-    Object.keys(customRanges).forEach(k => {
-      const c = customRanges[k];
-      if (c.saved) {
-        obj[k] = {
-          c: [...(c.callRange || [])],
-          r: [...(c.raiseRange2 || [])],
-          a: [...(c.allinRange || [])]
-        };
-      }
-    });
-
-    // 1. Guardado local (siempre se hace)
-    localStorage.setItem(LS_KEY, JSON.stringify(obj));
-
-    // 2. Guardado en la Nube (si hay sesión de Google)
-    const { data: { session: currentSession } } = await supabase.auth.getSession();
-    if (currentSession) {
-      await supabase.from('user_data').upsert({ 
-        user_id: currentSession.user.id, 
-        range_data: obj, 
-        stats: session, // Guarda la precisión, rachas y errores del Quiz
-        updated_at: new Date().toISOString()
-      });
-    }
-  } catch (e) {
-    console.error("Error guardando:", e);
-  }
-}
-lsLoad();
-
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let sit='open',stack='25',pos='BTN';
 let eRange=new Set();       // full editor range (raise ∪ shove for mixed)
@@ -1007,6 +780,58 @@ let bAllinSet=new Set();    // builder all-in
 let curQ=null,bTarget=null,bSel=new Set();
 let session={cor:0,tot:0,streak:0,best:0,mistakes:{},sitAcc:{open:{c:0,t:0},'3bet':{c:0,t:0}},weights:{}};
 
+// ─── PERSISTENT SAVE (localStorage & Supabase) ───────────────────────────────
+const LS_KEY='rtrainer_v2';
+const customRanges={};
+
+function lsLoad(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(LS_KEY)||'{}');
+    Object.keys(raw).forEach(k=>{
+      const v=raw[k];
+      if(Array.isArray(v)){
+        const cl=new Set(v);
+        customRanges[k]={range:cl,callRange:cl,raiseRange2:new Set(),allinRange:new Set(),saved:true};
+      } else {
+        const cl=new Set(v.c||[]);
+        const ra=new Set(v.r||[]);
+        const ai=new Set(v.a||[]);
+        customRanges[k]={range:new Set([...cl,...ra,...ai]),callRange:cl,raiseRange2:ra,allinRange:ai,saved:true};
+      }
+    });
+  }catch(e){}
+}
+
+async function lsPersist() {
+  try {
+    const obj = {};
+    Object.keys(customRanges).forEach(k => {
+      const c = customRanges[k];
+      if (c.saved) {
+        obj[k] = {
+          c: [...(c.callRange || [])],
+          r: [...(c.raiseRange2 || [])],
+          a: [...(c.allinRange || [])]
+        };
+      }
+    });
+
+    localStorage.setItem(LS_KEY, JSON.stringify(obj));
+
+    const { data: { session: currentSession } } = await supabase.auth.getSession();
+    if (currentSession) {
+      await supabase.from('user_data').upsert({ 
+        user_id: currentSession.user.id, 
+        range_data: obj, 
+        stats: session, 
+        updated_at: new Date().toISOString()
+      });
+    }
+  } catch (e) {
+    console.error("Error guardando:", e);
+  }
+}
+
 function getCKey(){return sit+'_'+stack+'_'+pos;}
 function getDefaultRange(){return getRange(sit,stack,pos)||new Set();}
 function getDisplayRange(){return customRanges[getCKey()]?.range||getDefaultRange();}
@@ -1016,7 +841,6 @@ function isSavedCustom(){const c=getCustomState();return c&&c.saved;}
 function getPosLabel(p,s){s=s&&CFG[s]?s:sit;return (CFG[s]&&CFG[s].posLabels)?.[p]||p;}
 
 // ─── GRID BUILDER ─────────────────────────────────────────────────────────────
-// callSet=green, raiseSet=bright-red, allinSet=dark-red (all optional)
 function buildGrid(id,callSet,raiseSet,allinSet){
   const w=document.getElementById(id);if(!w)return;
   w.innerHTML='';
@@ -1041,7 +865,6 @@ function buildGrid(id,callSet,raiseSet,allinSet){
   });
 }
 
-// ─── DRAG SYSTEM ──────────────────────────────────────────────────────────────
 function makeDraggable(elId,getSet,onChanged){
   const el=document.getElementById(elId);if(!el)return;
   let active=false,turnOn=false;
@@ -1072,14 +895,12 @@ function makeDraggable(elId,getSet,onChanged){
   el.addEventListener('touchend',()=>{active=false;});
 }
 
-// ─── EXPLORER ─────────────────────────────────────────────────────────────────
 function renderExplorer(){
   updateCellSize&&setTimeout(updateCellSize,0);
   const displayed=getDisplayRange();
   const shv=getShoveRange(stack,pos);
   const isCustom=!!getCustomState();
   if(isCustom){
-    // Custom save: stored as {raiseRange, shoveRange} or legacy flat {range}
     const cs=getCustomState();
     eCallSet=new Set(cs.callRange||cs.raiseRange||cs.range||[]);
     eRaiseSet=new Set(cs.raiseRange2||[]);
@@ -1087,7 +908,6 @@ function renderExplorer(){
     eRange=new Set([...eCallSet,...eRaiseSet,...eAllinSet]);
     buildGrid('eg',eCallSet,eRaiseSet,eAllinSet);
   } else if(isOpenAllin(stack)){
-    // entire range = all-in (PF data)
     eCallSet=new Set();
     eRaiseSet=new Set();
     eAllinSet=new Set(PF[stack]?.[pos]||[]);
@@ -1112,7 +932,6 @@ function renderExplorer(){
 function updateEStats(){
   let cc=0;eRange.forEach(hd=>cc+=cmb(hd));
   const pct=cc/1326*100;
-  // per-color combos
   let ccCall=0,ccRaise=0,ccAllin=0;
   eCallSet.forEach(hd=>ccCall+=cmb(hd));
   eRaiseSet.forEach(hd=>ccRaise+=cmb(hd));
@@ -1122,15 +941,12 @@ function updateEStats(){
   document.getElementById('r-hands').textContent=eRange.size;
   document.getElementById('r-cmb').textContent=cc;
   document.getElementById('r-pct').textContent=pct.toFixed(1)+'%';
-  // action cards
   const foldCmb=1326-cc;
   const callPct=ccCall/1326*100, raisePct=ccRaise/1326*100, allinPct=ccAllin/1326*100, foldPct=foldCmb/1326*100;
-  // bar segments
   document.getElementById('rbar-call').style.width=callPct+'%';
   document.getElementById('rbar-raise').style.width=raisePct+'%';
   document.getElementById('rbar-allin').style.width=allinPct+'%';
   document.getElementById('rbar-fold').style.width=foldPct+'%';
-  // cards
   document.getElementById('rbd-call-pct').textContent=callPct.toFixed(1)+'%';
   document.getElementById('rbd-call-cmb').textContent=ccCall+' combos';
   document.getElementById('rbd-raise-pct').textContent=raisePct.toFixed(1)+'%';
@@ -1139,39 +955,27 @@ function updateEStats(){
   document.getElementById('rbd-allin-cmb').textContent=ccAllin+' combos';
   document.getElementById('rbd-fold-pct').textContent=foldPct.toFixed(1)+'%';
   document.getElementById('rbd-fold-cmb').textContent=foldCmb+' combos';
-  // show/hide raise & allin cards
   document.getElementById('ac-raise-box').style.display=ccRaise>0?'flex':'none';
   document.getElementById('ac-allin-box').style.display=ccAllin>0?'flex':'none';
-  // widen info-col based on active cards: base 200px + 130px per card
-  const nCards=2+(ccRaise>0?1:0)+(ccAllin>0?1:0); // call + fold always + extras
+  const nCards=2+(ccRaise>0?1:0)+(ccAllin>0?1:0); 
   const infoW=nCards*130+20;
   document.documentElement.style.setProperty('--info-w',infoW+'px');
   setTimeout(updateCellSize,50);
-  // rename call card label
   document.getElementById('ac-call-box').querySelector('.ac-name').textContent=ccRaise>0||ccAllin>0?'Call':'En rango';
-  // badges
   const mod=isModified(),sav=isSavedCustom();
   document.getElementById('e-badge-mod').classList.toggle('show',mod);
   document.getElementById('e-badge-sav').classList.toggle('show',sav&&!mod);
-  // legend
   const showLeg=isOpenMixed(stack)&&!getCustomState();
   document.getElementById('e-legend').style.display=showLeg?'flex':'none';
-  // brush row — show whenever mixed (custom or default)
   document.getElementById('brush-row').style.display='flex';
-  // brush buttons always visible
-  // reset to raise if shove selected but not available
-
-  // tip
   document.getElementById('r-tip').className='tip '+CFG[sit].tipClass;
   document.getElementById('r-tip').innerHTML=getTip(sit,stack,pos,eRange,pct);
-  // extra row
   const er=document.getElementById('r-extra-row');
   er.style.display='none';
 }
 
 function getTip(s,st,p,range,pct){
   const bb=parseInt(st),posLbl=getPosLabel(p);
-
   if(s==='open'){
     if(isOpenAllin(st)) return `<strong>Open Raise ${bb}BB — ${posLbl}</strong> — Con ${bb}BB la apertura ES un all-in directo. Decisión binaria: shove o fold. Empujas el <strong>${pct.toFixed(0)}%</strong> del rango — fold equity + equity propia hacen rentable pushear amplio desde posición tardía.`;
     if(isOpenMixed(st)){
@@ -1184,12 +988,9 @@ function getTip(s,st,p,range,pct){
     return `<strong>Apertura ${bb}BB — ${posLbl}</strong> — Abre a ${size}. Rango MTT ajustado: sin rake, con presión ICM. BTN/CO pueden abrir ${pct.toFixed(0)}% del rango. Cuidado con stacks de 15-20BB detrás que pueden re-shove.`;
   }
   if(s==='3bet'){const parts=p.split('_');const my=parts[0],vs=parts[1];return `<strong>3-Bet desde ${my} vs ${vs} (${bb}BB)</strong> — Rango polar: valor puro (AA-QQ,AKs) + bluffs con blockers (A5s-A2s). Vs UTG/MP: aprieta solo a premium. Vs BTN/SB: amplía bluffs porque abren muy wide. El sizing ideal es 3x IP y 3.5-4x OOP.`;}
-
-
   return '';
 }
 
-// ─── SAVE / RESET / COPY ──────────────────────────────────────────────────────
 document.getElementById('e-save').addEventListener('click',()=>{
   customRanges[getCKey()]={
     callRange:  new Set(eCallSet),
@@ -1220,7 +1021,6 @@ document.getElementById('e-copy').addEventListener('click',()=>{
   setTimeout(()=>btn.textContent='⎘ Copiar',1500);
 });
 
-// ─── MINI GRID ────────────────────────────────────────────────────────────────
 function renderMiniGrid(containerId,callSet,raiseSet,allinSet,hand){
   const wrap=document.getElementById(containerId);if(!wrap)return;
   const mg=document.createElement('div');mg.className='mini-grid-wrap';
@@ -1246,7 +1046,6 @@ function renderMiniGrid(containerId,callSet,raiseSet,allinSet,hand){
   wrap.appendChild(mg);
 }
 
-// ─── QUIZ ─────────────────────────────────────────────────────────────────────
 function pickWeightedHand(){
   const hard=Object.keys(session.mistakes).filter(hd=>session.mistakes[hd]>=2);
   const useHard=document.getElementById('diff-only').checked&&hard.length>0;
@@ -1262,7 +1061,6 @@ function pickQuizScen(){
   const p=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];
   return{st,p};
 }
-// Poker table seat positions: [left%, top%] relative to ptable-outer (incl padding)
 const _SEATS_POS={UTG:[15,10],MP:[50,5],CO:[85,10],BTN:[95,52],SB:[80,92],BB:[20,92]};
 const _SEATS_ORD=['UTG','MP','CO','BTN','SB','BB'];
 const _SUITS_SYM={s:'♠',h:'♥',d:'♦',c:'♣'};
@@ -1286,7 +1084,6 @@ function renderPokerTable(hd,pos,st,eSit){
   const sl=document.getElementById('q-stack-lbl');
   if(sl) sl.textContent=st+'BB';
   const heroP=_heroPos(pos,eSit);
-  // For 3-bet: extract who opened
   const openerP=(eSit==='3bet'&&pos.includes('_'))?pos.split('_')[1]:null;
   const{r1,r2,s1,s2}=_parseHand(hd);
   _SEATS_ORD.forEach(sp=>{
@@ -1296,7 +1093,6 @@ function renderPokerTable(hd,pos,st,eSit){
     const seat=document.createElement('div');
     seat.className='pseat'+(isHero?' hero':isOpener?' opener':'');
     seat.style.left=lp+'%';seat.style.top=tp+'%';
-    // cards
     const cardWrap=document.createElement('div');
     cardWrap.className='pseat-cards';
     if(isHero){
@@ -1308,22 +1104,18 @@ function renderPokerTable(hd,pos,st,eSit){
         cardWrap.appendChild(cd);
       });
     } else if(isOpener){
-      // Show two "raised" cards — red tinted, slightly fanned
       cardWrap.innerHTML='<div class="pcard-open" style="transform:rotate(-8deg);margin-right:-8px;"></div><div class="pcard-open" style="transform:rotate(4deg);"></div>';
     } else {
       cardWrap.innerHTML='<div class="pcard-back"></div><div class="pcard-back"></div>';
     }
     seat.appendChild(cardWrap);
-    // label — opener shows stack minus 2BB
     const lbl=document.createElement('div');
     lbl.className='pseat-label';
     const displayStack=isOpener?(parseInt(st)-2)+'BB':st+'BB';
     lbl.innerHTML='<div class="sp">'+sp+'</div><div class="ss">'+displayStack+'</div>';
     seat.appendChild(lbl);
     outer.appendChild(seat);
-    // chips on the table felt for opener
     if(isOpener){
-      // Interpolate 35% from seat toward table center (50%, 52%)
       const cx=50,cy=52;
       const chipX=lp+(cx-lp)*0.35;
       const chipY=tp+(cy-tp)*0.35;
@@ -1338,7 +1130,6 @@ function renderPokerTable(hd,pos,st,eSit){
       outer.appendChild(chips);
     }
   });
-  // Dealer button near BTN
   const[bx,by]=_SEATS_POS['BTN'];
   const db=document.createElement('div');
   db.className='pdealerbtn';
@@ -1347,8 +1138,6 @@ function renderPokerTable(hd,pos,st,eSit){
   outer.appendChild(db);
 }
 
-
-// Helper: given a custom range object, return the action for hand hd
 function actionFromCustom(hd, custom){
   if(!custom) return null;
   if(custom.allinRange && custom.allinRange.has(hd)) return 'allin';
@@ -1360,32 +1149,24 @@ function actionFromCustom(hd, custom){
 function getCorrectAction(hd,qs,st,p){
   const key=qs+'_'+st+'_'+p;
   const custom=customRanges[key];
-
   if(qs==='open'){
-    // Si hay rango custom, respeta exactamente el color guardado
     if(custom){
       return actionFromCustom(hd, custom);
     }
-
-    // Rangos por defecto
     if(isOpenAllin(st,qs)){
       const r=getRange(qs,st,p);
       return r && r.has(hd) ? 'allin' : 'fold';
     }
-
     if(isOpenMixed(st,qs)){
       const shv=OP_SHOVE[st]?.[p];
       const rai=OP_RAISE[st]?.[p];
-
       if(shv && shv.has(hd)) return 'allin';
-      if(rai && rai.has(hd)) return 'call';   // <-- antes devolvía 'raise'
+      if(rai && rai.has(hd)) return 'call';   
       return 'fold';
     }
-
     const r=getRange(qs,st,p);
     return r && r.has(hd) ? 'raise' : 'fold';
   }
-
   if(qs==='3bet'){
     if(custom){
       return actionFromCustom(hd, custom);
@@ -1393,7 +1174,6 @@ function getCorrectAction(hd,qs,st,p){
     const r=getRange(qs,st,p);
     return r && r.has(hd) ? 'raise' : 'fold';
   }
-
   return 'fold';
 }
 
@@ -1402,7 +1182,6 @@ function actionLabel(act){
 }
 function nextQ(){
   const hd=pickWeightedHand();
-  // Resolve effective sit/stack/pos — respects 'any' wildcards
   let qSit=sit,qSt=stack,qPos=pos;
   if(qSit==='any'){
     qSit=['open','3bet'][Math.floor(Math.random()*2)];
@@ -1421,13 +1200,8 @@ function nextQ(){
     const cfg=CFG[qSit];
     qPos=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];
   }
-  // Use saved custom range if it exists, otherwise default
-  const qKey=qSit+'_'+qSt+'_'+qPos;
-  const qCustom=customRanges[qKey];
   const qAct=getCorrectAction(hd,qSit,qSt,qPos);
-  const range=qCustom?.range||(getRange(qSit,qSt,qPos)||new Set());
   curQ={hd,st:qSt,p:qPos,inRange:qAct!=='fold',sit:qSit};
-  const cfg=CFG[qSit];
   let ctx='';
   if(qSit==='open') ctx=isOpenAllin(qSt,qSit)?`<strong>Open Raise</strong> · Stack <strong>${qSt}BB</strong> · Pos: <strong>${qPos}</strong> · ¿Shove o fold?`:isOpenMixed(qSt,qSit)?`<strong>Open Raise</strong> · Stack <strong>${qSt}BB</strong> · Pos: <strong>${qPos}</strong> · ¿Juegas? (raise/shove)`:`<strong>Open Raise</strong> · Stack <strong>${qSt}BB</strong> · Pos: <strong>${qPos}</strong> · ¿Abres?`;
   else ctx=`<strong>3-Bet</strong> · Stack <strong>${qSt}BB</strong> · <strong>${getPosLabel(qPos,qSit)}</strong> · ¿Haces 3-bet?`;
@@ -1456,9 +1230,7 @@ function answerAction(act){
   else{session.streak=0;session.weights[hd]=(session.weights[hd]||1)+2;session.mistakes[hd]=(session.mistakes[hd]||0)+1;}
   updateHdrStats();
   const fb=document.getElementById('q-fb');
-  const why=buildWhy(hd,inRange,qs,st,p);
   fb.className='fb show '+(right?'ok':'bad');
-  // Build mini grid — use exact saved color sets if available
   const qKey=qs+'_'+st+'_'+p;
   const qCustom=customRanges[qKey];
   const isAllinSt=isOpenAllin(st,qs);
@@ -1487,6 +1259,8 @@ function answerAction(act){
     `<div id="q-mini"></div>`;
   renderMiniGrid('q-mini',mgCall,mgRaise,mgAllin,hd);
   setQBtnsDisabled(true);
+  
+  // Guardar en Supabase tras cada respuesta del Quiz
   lsPersist();
 }
 
@@ -1529,7 +1303,6 @@ document.addEventListener('keydown',e=>{
 function loadBuild(st,p){
   const key=sit+'_'+st+'_'+p;
   const custom=customRanges[key];
-  // Build per-color target sets
   let tgtCall=new Set(),tgtRaise=new Set(),tgtAllin=new Set();
   if(custom){
     tgtCall=new Set(custom.callRange||[]);
@@ -1568,10 +1341,7 @@ function clearBuild(){
 function checkBuild(){
   if(!bTarget)return;
   const{tgtCall,tgtRaise,tgtAllin,range:tgtAll}=bTarget;
-  // has colors?
   const hasColors=(tgtCall.size+tgtRaise.size+tgtAllin.size)>0;
-
-  // per-color counters: correct, missing (fn), wrong-color (fw), extra (fp)
   const stats={
     call: {correct:0,missing:0,wrongColor:0,extra:0,label:'Call',color:'#4ade80',bg:'#0f3d20'},
     raise:{correct:0,missing:0,wrongColor:0,extra:0,label:'Raise',color:'#fecaca',bg:'#5a0a0a'},
@@ -1582,14 +1352,12 @@ function checkBuild(){
   document.querySelectorAll('#bg .cell').forEach(c=>{
     const hd=c.dataset.h;
     c.className='cell'+(c.dataset.i==c.dataset.j?' pair':'');
-
     const inTgtCall=tgtCall.has(hd),inTgtRaise=tgtRaise.has(hd),inTgtAllin=tgtAllin.has(hd);
     const inTgt=tgtAll.has(hd);
     const myCall=bCallSet.has(hd),myRaise=bRaiseSet.has(hd),myAllin=bAllinSet.has(hd);
     const inSel=bSel.has(hd);
 
     if(!hasColors){
-      // Simple range: just right/wrong
       if(inSel&&inTgt){c.classList.add('ci-call');stats.call.correct++;}
       else if(!inSel&&!inTgt){c.classList.add('co');}
       else if(inSel&&!inTgt){c.classList.add('fp');stats.fold.extra++;}
@@ -1615,7 +1383,6 @@ function checkBuild(){
     }
   });
 
-  // Score: correct / total in range
   const totalTgt=tgtAll.size;
   const totalCorrect=stats.call.correct+stats.raise.correct+stats.allin.correct;
   const totalWrong=stats.call.wrongColor+stats.raise.wrongColor+stats.allin.wrongColor;
@@ -1623,17 +1390,14 @@ function checkBuild(){
   const f1Score=totalTgt>0?Math.round(totalCorrect/totalTgt*100):0;
   const ok=f1Score>=80&&totalWrong===0&&stats.fold.extra===0;
 
-  // Build HTML feedback
   let html=`<strong style="font-size:15px;">Puntuación: ${f1Score}%</strong>`;
   if(ok) html+=' <span style="color:var(--gbr)">✓ ¡Perfecto!</span>';
   html+='<div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">';
 
   if(hasColors){
-    // Per-color rows
     [{k:'call',tgt:tgtCall},{k:'raise',tgt:tgtRaise},{k:'allin',tgt:tgtAllin}].forEach(({k,tgt})=>{
       if(tgt.size===0)return;
       const s=stats[k];
-      const rowOk=s.correct===tgt.size&&s.wrongColor===0;
       html+=`<div style="background:${s.bg};border:1px solid ${s.color}33;border-radius:6px;padding:8px 12px;">
         <div style="font-size:12px;font-weight:700;color:${s.color};margin-bottom:4px;">■ ${s.label} <span style="font-weight:400;opacity:.7">(${tgt.size} manos)</span></div>
         <div style="font-size:12px;display:flex;gap:12px;flex-wrap:wrap;">
@@ -1656,9 +1420,7 @@ function checkBuild(){
   if(totalMissing===0&&totalWrong===0&&stats.fold.extra===0){
     html+=`<div style="font-size:12px;color:var(--gbr);text-align:center;padding-top:4px;">🎯 Sin errores</div>`;
   }
-
   html+='</div>';
-
   const fb=document.getElementById('b-fb');
   fb.className='fb show '+(ok?'ok':'bad');
   fb.innerHTML=html;
@@ -1753,7 +1515,6 @@ function buildPosBtns(){
     b.addEventListener('click',()=>{pos=p;buildPosBtns();refresh();});
     el.appendChild(b);
   });
-  // Any button for position
   const anyB=document.createElement('button');
   anyB.className='ob'+(pos==='any'?' au':'');
   anyB.textContent='★ Any';
@@ -1804,14 +1565,12 @@ document.querySelectorAll('.tab').forEach(t=>{
 });
 
 // ─── DRAG HOOKS ───────────────────────────────────────────────────────────────
-// Explorer: brush-aware (raise/shove/erase)
 (()=>{
   const el=document.getElementById('eg');
   let active=false;
   const applyBrush=target=>{
     const c=target?.closest?.('.cell');if(!c)return;
     const hd=c.dataset.h;
-    const mixed=isOpenMixed(stack);
     const clearCell=()=>{eCallSet.delete(hd);eRaiseSet.delete(hd);eAllinSet.delete(hd);eRange.delete(hd);c.classList.remove('on','shv','ain');};
     if(eBrush==='erase'){
       clearCell();
@@ -1828,8 +1587,7 @@ document.querySelectorAll('.tab').forEach(t=>{
   el.addEventListener('mousedown',e=>{
     const c=e.target.closest('.cell');if(!c)return;
     e.preventDefault();active=true;
-    // for non-mixed simple toggle: determine turnOn from first cell
-    el._turnOn=!eRange.has(c.dataset.h); // for non-mixed toggle
+    el._turnOn=!eRange.has(c.dataset.h);
     applyBrush(c);
   });
   el.addEventListener('mouseover',e=>{if(active)applyBrush(e.target);});
@@ -1845,7 +1603,6 @@ document.querySelectorAll('.tab').forEach(t=>{
   el.addEventListener('touchend',()=>{active=false;});
 })();
 
-// Builder: brush-aware
 (()=>{
   const el=document.getElementById('bg');
   let active=false;
@@ -1867,7 +1624,6 @@ document.querySelectorAll('.tab').forEach(t=>{
   el.addEventListener('touchend',()=>{active=false;});
 })();
 
-// Builder brush buttons
 ['allin','raise','call','erase'].forEach(mode=>{
   const btn=document.getElementById('b-brush-'+mode);
   if(!btn)return;
@@ -1878,7 +1634,6 @@ document.querySelectorAll('.tab').forEach(t=>{
   });
 });
 
-
 // ─── GRID RESIZE ──────────────────────────────────────────────────────────────
 function updateCellSize(){
   const wrap=document.getElementById('eg-wrap');
@@ -1887,7 +1642,6 @@ function updateCellSize(){
   const infoW=document.querySelector(".info-col")?.getBoundingClientRect().width||340;
   const usable=available-infoW-40;
   if(available<10) return;
-  // 14 data cols + 1 label col = 15 units
   const cs=Math.floor(usable/15);
   const clamped=Math.min(Math.max(cs,20),70);
   document.documentElement.style.setProperty('--cs',clamped+'px');
@@ -1898,9 +1652,16 @@ window.addEventListener('resize',updateCellSize);
 document.addEventListener('DOMContentLoaded',updateCellSize);
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-// Mark open as active sit button
 document.querySelector('[data-sit="open"]').classList.add('ab');
-buildStackBtns();buildPosBtns();renderExplorer();nextQ();
+lsLoad();
+buildStackBtns();
+buildPosBtns();
+renderExplorer();
+nextQ();
+
+// Iniciar sesión y sobrescribir con la nube si es necesario (AL FINAL)
+setupAuth();
+
 </script>
 </body>
 </html>
