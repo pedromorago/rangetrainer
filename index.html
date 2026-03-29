@@ -265,7 +265,6 @@ input[type=checkbox]{accent-color:var(--gold);}
     <button class="ob ab" data-sit="open">Open Raise</button>
     <button class="ob" data-sit="3bet">3-Bet</button>
     <button class="ob" data-sit="any">★ Any</button>
-
   </div></div>
   <div class="cg"><div class="cl">Stack (BB)</div><div class="copts" id="stack-opts"></div></div>
   <div class="cg"><div class="cl">Posición</div><div class="copts" id="pos-opts"></div></div>
@@ -415,14 +414,83 @@ input[type=checkbox]{accent-color:var(--gold);}
 </div>
 
 <script type="module">
-// 1. Conexión con Supabase
+// ─── 1. CONEXIÓN SUPABASE Y LOGIN ────────────────────────────────────────────
 import { createClient } from 'https://esm.sh/@supabase/supabase-js'
 
 const SUPABASE_URL = 'https://grdmhcdgaqbfpnimcrxr.supabase.co'
 const SUPABASE_KEY = 'sb_publishable_fsMayEY8ayyb197VDgwBDQ_PHhTZQnT' 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
-// ─── HAND UTILS ───────────────────────────────────────────────────────────────
+let currentUser = null;
+
+async function setupAuth() {
+  const { data: { session: currentSession } } = await supabase.auth.getSession()
+  currentUser = currentSession?.user || null;
+  
+  const hdrStats = document.querySelector('.hdr-stats');
+  const authDiv = document.createElement('div');
+  authDiv.style.display = 'flex';
+  authDiv.style.alignItems = 'center';
+  authDiv.style.marginLeft = '16px';
+  authDiv.style.paddingLeft = '16px';
+  authDiv.style.borderLeft = '1px solid var(--b1)';
+  hdrStats.appendChild(authDiv);
+
+  if (currentSession) {
+    const userEmail = currentSession.user.email;
+    authDiv.innerHTML = `
+      <span style="font-size:11px; color:var(--gold); margin-right:10px; font-weight:600;">${userEmail}</span>
+      <button class="ob" id="btn-logout" style="border-color:var(--red); color:var(--rbr);">Salir</button>
+    `;
+    document.getElementById('btn-logout').onclick = async () => {
+      await supabase.auth.signOut();
+      window.location.reload(); 
+    };
+
+    // Descargar datos
+    const { data, error } = await supabase
+      .from('user_data')
+      .select('range_data, stats')
+      .eq('user_id', currentSession.user.id)
+      .single();
+      
+    if (data) {
+      if (data.range_data) {
+        // Re-hidratar los Sets desde JSON
+        Object.keys(data.range_data).forEach(k => {
+           const v = data.range_data[k];
+           customRanges[k] = {
+              callRange: new Set(v.c || []),
+              raiseRange2: new Set(v.r || []),
+              allinRange: new Set(v.a || []),
+              range: new Set([...(v.c||[]), ...(v.r||[]), ...(v.a||[])]),
+              saved: true
+           };
+        });
+      }
+      if (data.stats) Object.assign(session, data.stats); 
+      
+      updateHdrStats();
+      renderStats();
+      renderExplorer();
+    }
+  } else {
+    authDiv.innerHTML = `
+      <button class="ob au" id="btn-google" style="display:flex; align-items:center; gap:6px;">
+        <svg style="width:14px;height:14px;" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Entrar con Google
+      </button>
+    `;
+    document.getElementById('btn-google').onclick = async () => {
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin }
+      });
+    };
+  }
+}
+
+// ─── 2. HAND UTILS ────────────────────────────────────────────────────────────
 const R=['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
 const ALL_HANDS=[];
 for(let i=0;i<13;i++) for(let j=0;j<13;j++) ALL_HANDS.push(hnd(i,j));
@@ -433,8 +501,7 @@ function isSuited(x){return x.endsWith('s');}
 function isPair(x){return x.length===2;}
 function handColor(x){return isPair(x)?'p':isSuited(x)?'s':'o';}
 
-// ─── RANGE DATA ───────────────────────────────────────────────────────────────
-// PUSH/FOLD
+// ─── 3. RANGE DATA ────────────────────────────────────────────────────────────
 const PF={};
 PF['5']={UTG:mk('AA KK QQ JJ TT 99 88 77 66 55 44 33 22 AKs AQs AJs ATs A9s A8s A7s A6s A5s A4s A3s A2s KQs KJs KTs K9s K8s K7s K6s K5s QJs QTs Q9s Q8s JTs J9s J8s T9s T8s 98s 97s 87s 76s 65s 54s AKo AQo AJo ATo A9o A8o A7o A6o A5o A4o A3o KQo KJo KTo K9o K8o QJo QTo Q9o JTo J9o T9o T8o 98o 87o 76o'),MP:null,CO:null,BTN:null,SB:null};
 PF['5'].MP=new Set([...PF['5'].UTG,...mk('K4s K3s Q7s J7s T7s 96s 85s 74s 63s 53s A2o K7o Q8o J8o T8o 97o 86o 75o 65o 64o 54o')]);
@@ -467,11 +534,7 @@ PF['20'].CO=new Set([...PF['20'].MP,...mk('44 33 22 K8s K7s Q8s J8s T7s 86s 75s 
 PF['20'].BTN=new Set([...PF['20'].CO,...mk('K6s K5s K4s Q7s Q6s J7s J6s T6s T5s 96s 85s 74s 63s A5o A4o A3o A2o K8o K7o Q8o J8o T8o 97o 86o 75o 65o')]);
 PF['20'].SB=new Set([...PF['20'].BTN,...mk('K3s K2s Q5s Q4s J5s T5s 95s 84s 73s K6o K5o Q7o Q6o J7o T7o 96o 85o 74o 64o 54o')]);
 
-// OPENING – raise/fold (25BB+) y raise+shove (15/20BB)
-// OP_RAISE = manos que abres a 2.5x (fold a 3-bet o call si son premium)
-// OP_SHOVE = manos que abres directamente all-in para negar fold equity al 3-bettor
 const OP_RAISE={}, OP_SHOVE={};
-
 OP_RAISE['12']={UTG:mk('66 55 44 33 22 A9s A8s A7s A6s A5s A4s A3s A2s KJs KTs K9s QJs QTs JTs T9s 98s 87s 76s A9o A8o KJo KTo QJo QTo JTo'),MP:null,CO:null,BTN:null,SB:null};
 OP_RAISE['12'].MP=new Set([...OP_RAISE['12'].UTG,...mk('K8s Q9s J9s T8s 97s 86s 65s 54s Q9o T9o 98o')]);
 OP_RAISE['12'].CO=new Set([...OP_RAISE['12'].MP,...mk('K7s K6s K5s Q8s J8s T7s 96s 85s 74s 63s A7o A6o A5o A4o K9o J9o 76o 65o')]);
@@ -1260,7 +1323,6 @@ function answerAction(act){
   renderMiniGrid('q-mini',mgCall,mgRaise,mgAllin,hd);
   setQBtnsDisabled(true);
   
-  // Guardar en Supabase tras cada respuesta del Quiz
   lsPersist();
 }
 
