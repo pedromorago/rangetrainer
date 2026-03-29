@@ -422,10 +422,10 @@ const SUPABASE_URL = 'https://grdmhcdgaqbfpnimcrxr.supabase.co'
 const SUPABASE_KEY = 'sb_publishable_fsMayEY8ayyb197VDgwBDQ_PHhTZQnT' 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
-// 2. Crear la interfaz de Login
+// 2. Crear la interfaz de Login y cargar datos
 async function setupAuth() {
-  // Comprobamos si el usuario ya está logueado
-  const { data: { session } } = await supabase.auth.getSession()
+  // Comprobamos si el usuario ya está logueado (le llamamos currentSession para no chocar con la variable 'session' de tus stats)
+  const { data: { session: currentSession } } = await supabase.auth.getSession()
   
   // Buscamos la cabecera para poner el botón
   const hdrStats = document.querySelector('.hdr-stats');
@@ -437,9 +437,9 @@ async function setupAuth() {
   authDiv.style.borderLeft = '1px solid var(--b1)';
   hdrStats.appendChild(authDiv);
 
-  if (session) {
+  if (currentSession) {
     // SI ESTÁ LOGUEADO: Mostramos su email y el botón de Salir
-    const userEmail = session.user.email;
+    const userEmail = currentSession.user.email;
     authDiv.innerHTML = `
       <span style="font-size:11px; color:var(--gold); margin-right:10px; font-weight:600;">${userEmail}</span>
       <button class="ob" id="btn-logout" style="border-color:var(--red); color:var(--rbr);">Salir</button>
@@ -448,6 +448,26 @@ async function setupAuth() {
       await supabase.auth.signOut();
       window.location.reload(); // Recarga la página al salir
     };
+
+    // 👇 ESTO ES LO NUEVO: DESCARGAMOS TUS DATOS DE LA NUBE 👇
+    const { data, error } = await supabase
+      .from('user_data')
+      .select('range_data, stats')
+      .eq('user_id', currentSession.user.id)
+      .single();
+      
+    if (data) {
+      // Metemos los datos de la nube en las variables de tu juego
+      if (data.range_data) Object.assign(customRanges, data.range_data);
+      if (data.stats) Object.assign(session, data.stats); 
+      
+      // Actualizamos los números en pantalla
+      if (typeof updateHdrStats === 'function') updateHdrStats();
+      if (typeof renderStats === 'function') renderStats();
+      if (typeof renderExplorer === 'function') renderExplorer();
+    }
+    // 👆 FIN DE LO NUEVO 👆
+
   } else {
     // SI NO ESTÁ LOGUEADO: Mostramos el botón de Google
     authDiv.innerHTML = `
