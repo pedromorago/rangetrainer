@@ -418,8 +418,82 @@ input[type=checkbox]{accent-color:var(--gold);}
 </div>
 
 </div>
-<script>
-// ─── HAND UTILS ───────────────────────────────────────────────────────────────
+
+<script type="module">
+// 1. Conexión con Supabase
+import { createClient } from 'https://esm.sh/@supabase/supabase-js'
+
+const SUPABASE_URL = 'https://grdmhcdgaqbfpnimcrxr.supabase.co'
+const SUPABASE_KEY = 'sb_publishable_fsMayEY8ayyb197VDgwBDQ_PHhTZQnT' 
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+let currentUser = null;
+
+// 2. Gestión de Sesión y UI
+async function checkUser() {
+  const { data: { user } } = await supabase.auth.getUser()
+  currentUser = user;
+  renderAuthButton();
+  if (user) loadUserProgress();
+}
+
+function renderAuthButton() {
+  const container = document.querySelector('.hdr-stats');
+  if (!container) return;
+  let btn = document.getElementById('cloud-login-btn');
+  
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id = 'cloud-login-btn';
+    btn.className = 'ob au'; 
+    btn.style.marginLeft = '15px';
+    container.appendChild(btn);
+  }
+
+  if (currentUser) {
+    btn.textContent = 'SALIR';
+    btn.onclick = async () => { await supabase.auth.signOut(); location.reload(); };
+  } else {
+    btn.textContent = 'ENTRAR / REGISTRO';
+    btn.onclick = authFlow;
+  }
+}
+
+async function authFlow() {
+  const email = prompt("Email de alumno:");
+  const password = prompt("Contraseña (mín. 6 caracteres):");
+  if (!email || !password) return;
+
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  
+  if (error) {
+    const { data: reg, error: regErr } = await supabase.auth.signUp({ email, password });
+    if (regErr) alert("Error: " + regErr.message);
+    else alert("¡Cuenta creada! Revisa tu email para confirmar y vuelve a entrar.");
+  } else {
+    location.reload();
+  }
+}
+
+async function loadUserProgress() {
+  const { data } = await supabase
+    .from('user_data')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .single();
+    
+  if (data) {
+    if (data.range_data) Object.assign(customRanges, data.range_data);
+    if (data.stats) Object.assign(session, data.stats);
+    updateHdrStats();
+    if (typeof refresh === "function") refresh();
+  }
+}
+
+// Iniciar chequeo
+checkUser();
+
+// ─── HAND UTILS (AQUÍ CONTINÚA TU CÓDIGO ORIGINAL) ─────────────────────────────
 const R=['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
 const ALL_HANDS=[];
 for(let i=0;i<13;i++) for(let j=0;j<13;j++) ALL_HANDS.push(hnd(i,j));
