@@ -1247,11 +1247,13 @@ function buildPosBtns(){
     tbRows.style.display='block';
     buildTbOpenerBtns();
     buildTb3bettorBtns();
-    pos=tb3bettor+'_'+tbOpener;
+    // FIX: Solo reconstruimos la pos combinada si NO hemos forzado 'any'
+    if(pos !== 'any') {
+      pos=tb3bettor+'_'+tbOpener;
+    }
     return;
   }
 
-  // Open Raise: single row
   singleRow.style.display='block';
   tbRows.style.display='none';
   const positions=CFG[sit].positions;
