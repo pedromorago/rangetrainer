@@ -1272,14 +1272,14 @@ function buildTbOpenerBtns(){
   const el=document.getElementById('tb-opener-opts');el.innerHTML='';
   TB_OPENERS.forEach(op=>{
     const b=document.createElement('button');
-    b.className='ob'+(op===tbOpener?' ap':'');
+    // FIX: Comprobamos que pos !== 'any' para no dejarlo iluminado
+    b.className='ob'+(pos!=='any'&&op===tbOpener?' ap':'');
     b.textContent=dn(op);
     b.addEventListener('click',()=>{
       tbOpener=op;
-      // Validate that current 3bettor is still valid for this opener
       const valid=TB_3BETTORS_MAP[tbOpener];
       if(!valid.includes(tb3bettor)) tb3bettor=valid[0];
-      pos=tb3bettor+'_'+tbOpener;
+      pos=tb3bettor+'_'+tbOpener; // Salimos de 'any' forzando la combinación
       buildTbOpenerBtns();
       buildTb3bettorBtns();
       refresh();
@@ -1293,11 +1293,12 @@ function buildTb3bettorBtns(){
   const valid=TB_3BETTORS_MAP[tbOpener]||[];
   valid.forEach(bt=>{
     const b=document.createElement('button');
-    b.className='ob'+(bt===tb3bettor?' ap':'');
+    // FIX: Comprobamos que pos !== 'any'
+    b.className='ob'+(pos!=='any'&&bt===tb3bettor?' ap':'');
     b.textContent=dn(bt);
     b.addEventListener('click',()=>{
       tb3bettor=bt;
-      pos=tb3bettor+'_'+tbOpener;
+      pos=tb3bettor+'_'+tbOpener; // Salimos de 'any' forzando la combinación
       buildTb3bettorBtns();
       buildTbOpenerBtns();
       refresh();
