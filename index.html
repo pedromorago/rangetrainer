@@ -1017,19 +1017,19 @@ function actionFromCustom(hd, custom){
 function getCorrectAction(hd,qs,st,p){
   const key=qs+'_'+st+'_'+p;
   const custom=customRanges[key];
+  
   if(qs==='open'){
     if(custom) return actionFromCustom(hd, custom);
-    if(isOpenAllin(st,qs)){const r=getRange(qs,st,p);return r&&r.has(hd)?'allin':'fold';}
-    if(isOpenMixed(st,qs)){
-      const shv=OP_SHOVE[st]?.[p];const rai=OP_RAISE[st]?.[p];
-      if(shv&&shv.has(hd))return'allin';if(rai&&rai.has(hd))return'call';return'fold';
-    }
-    const r=getRange(qs,st,p);return r&&r.has(hd)?'raise':'fold';
+    const r=getRange(qs,st,p);
+    return r&&r.has(hd)?'call':'fold';  // Sin custom: cualquier mano en rango = OK
   }
+  
   if(qs==='3bet'){
     if(custom) return actionFromCustom(hd, custom);
-    const r=getRange(qs,st,p);return r&&r.has(hd)?'raise':'fold';
+    const r=getRange(qs,st,p);
+    return r&&r.has(hd)?'call':'fold';  // Sin custom: cualquier mano en rango = OK
   }
+  
   return 'fold';
 }
 
