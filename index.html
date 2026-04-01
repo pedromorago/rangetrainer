@@ -1132,33 +1132,30 @@ document.addEventListener('keydown',e=>{
 
 // ─── BUILDER ──────────────────────────────────────────────────────────────────
 function loadBuild(st,p){
-  const key=sit+'_'+st+'_'+p;const custom=customRanges[key];
+  const key=sit+'_'+st+'_'+p;
+  const custom=customRanges[key];
   let tgtCall=new Set(),tgtRaise=new Set(),tgtAllin=new Set();
-  if(custom){tgtCall=new Set(custom.callRange||[]);tgtRaise=new Set(custom.raiseRange2||[]);tgtAllin=new Set(custom.allinRange||[]);}
-  else if(sit==='open'){
+  
+  // PRIMERO: Chequear si hay custom guardado
   if(custom){
-    // Si hay custom guardado, valida contra ESE
     tgtCall=new Set(custom.callRange||[]);
     tgtRaise=new Set(custom.raiseRange2||[]);
     tgtAllin=new Set(custom.allinRange||[]);
-  } else {
-    // Si NO hay custom, valida contra el rango default del software
+  } 
+  // OPEN RAISE
+  else if(sit==='open'){
     const fullRange = getRange(sit, st, p) || new Set();
     tgtCall = new Set(fullRange);
     // tgtRaise y tgtAllin quedan vacíos
-  }
-} else if(sit==='3bet'){
-  if(custom){
-    tgtCall=new Set(custom.callRange||[]);
-    tgtRaise=new Set(custom.raiseRange2||[]);
-    tgtAllin=new Set(custom.allinRange||[]);
-  } else {
+  } 
+  // 3-BET
+  else if(sit==='3bet'){
     const fullRange = getRange(sit, st, p) || new Set();
     tgtCall = new Set(fullRange);
     tgtRaise = new Set();
     tgtAllin = new Set();
   }
-}
+  
   const tgtAll=new Set([...tgtCall,...tgtRaise,...tgtAllin]);
   bTarget={sit,st,p,range:tgtAll,tgtCall,tgtRaise,tgtAllin};
   bSel=new Set();bCallSet=new Set();bRaiseSet=new Set();bAllinSet=new Set();
@@ -1171,9 +1168,6 @@ function loadBuild(st,p){
   document.getElementById('b-leg').style.display='none';
   buildGrid('bg',null,null,null);
   document.getElementById('b-cnt').textContent='0';
-
-  
-  
 }
 function clearBuild(){
   bSel=new Set();bCallSet=new Set();bRaiseSet=new Set();bAllinSet=new Set();
