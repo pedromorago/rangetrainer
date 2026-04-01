@@ -1262,12 +1262,21 @@ function buildPosBtns(){
   if(sit==='3bet'){
     singleRow.style.display='none';
     tbRows.style.display='block';
+    
+    // ← AGREGAR: Inicializar correctamente tbOpener y tb3bettor
+    if(pos === 'any' || !pos.includes('_')) {
+      tbOpener = 'UTG';
+      tb3bettor = 'CO';
+      pos = 'CO_UTG';
+    } else {
+      // Extraer de la combinación actual (ej: "CO_UTG" → tb3bettor="CO", tbOpener="UTG")
+      const parts = pos.split('_');
+      tb3bettor = parts[0];
+      tbOpener = parts[1];
+    }
+    
     buildTbOpenerBtns();
     buildTb3bettorBtns();
-    // FIX: Solo reconstruimos la pos combinada si NO hemos forzado 'any'
-    if(pos !== 'any') {
-      pos=tb3bettor+'_'+tbOpener;
-    }
     return;
   }
 
