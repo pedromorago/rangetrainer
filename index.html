@@ -1270,11 +1270,22 @@ function buildStackBtns(){
   if(stack!=='any'&&!stacks.includes(stack)) stack=stacks[Math.floor(stacks.length/2)];
   stacks.forEach(s=>{
     const b=document.createElement('button');b.className='ob'+(s===stack?' '+CFG[sit].activeClass:'');b.textContent=s+'BB';
-    b.addEventListener('click',()=>{stack=s;buildStackBtns();buildPosBtns();refresh();});
+    b.addEventListener('click',()=>{
+      if(stack===s) return;  // ← AGREGAR: Si es el mismo stack, no hagas nada
+      stack=s;
+      buildStackBtns();
+      buildPosBtns();
+      refresh();
+    });
     el.appendChild(b);
   });
   const anyB=document.createElement('button');anyB.className='ob'+(stack==='any'?' au':'');anyB.textContent='★ Any';
-  anyB.addEventListener('click',()=>{stack='any';buildStackBtns();refresh();});
+  anyB.addEventListener('click',()=>{
+    if(stack==='any') return;  // ← AGREGAR: Si ya es 'any', no hagas nada
+    stack='any';
+    buildStackBtns();
+    refresh();
+  });
   el.appendChild(anyB);
 }
 
