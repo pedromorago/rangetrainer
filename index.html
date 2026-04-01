@@ -1035,26 +1035,43 @@ function getCorrectAction(hd,qs,st,p){
 
 function actionLabel(act){return{allin:'All-in',raise:'Raise',call:'Call',fold:'Fold'}[act]||act;}
 
-function nextQ(){
+  function nextQ(){
   const hd=pickWeightedHand();
   let qSit=sit,qSt=stack,qPos=pos;
+  
+  // Si cualquiera es 'any', necesitamos elegir valores válidos
   if(qSit==='any'){
     qSit=['open','3bet'][Math.floor(Math.random()*2)];
-    const cfg=CFG[qSit];
-    qSt=cfg.stacks[Math.floor(Math.random()*cfg.stacks.length)];
-    qPos=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];
-  } else if(qSt==='any'&&qPos==='any'){
-    const cfg=CFG[qSit];
-    qSt=cfg.stacks[Math.floor(Math.random()*cfg.stacks.length)];
-    qPos=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];
-  } else if(qSt==='any'){
-    const cfg=CFG[qSit];
-    qSt=cfg.stacks[Math.floor(Math.random()*cfg.stacks.length)];
-    if(!cfg.positions.includes(qPos)) qPos=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];
-  } else if(qPos==='any'){
-    const cfg=CFG[qSit];
-    qPos=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];
   }
+  
+  const cfg=CFG[qSit];
+  
+  if(qSt==='any'){
+    qSt=cfg.stacks[Math.floor(Math.random()*cfg.stacks.length)];
+  }
+  
+  if(qPos==='any'){
+    // ← AGREGAR: Lógica especial para 3-bet
+    if(qSit==='3bet'){
+      // En 3-bet, elegir una combinación válida (ej: "CO_UTG")
+      const keys = Object.keys(TB[qSt]||{});
+      const validCombos = keys.filter(k => k.includes('_'));
+      qPos = validCombos.length > 0 
+        ? validCombos[Math.floor(Math.random()*validCombos.length)]
+        : 'CO_UTG'; // fallback
+    } else {
+      // En open, elegir una posición simple
+      qPos=cfg.positions[Math.floor(Math.random()*cfg.positions.length)];
+    }
+  } else if(qSit==='3bet' && !qPos.includes('_')) {
+    // Si estamos en 3-bet pero qPos es simple, convertir a combinación válida
+    const keys = Object.keys(TB[qSt]||{});
+    const validCombos = keys.filter(k => k.includes('_'));
+    qPos = validCombos.length > 0 
+      ? validCombos[Math.floor(Math.random()*validCombos.length)]
+      : 'CO_UTG';
+  }
+  
   const qAct=getCorrectAction(hd,qSit,qSt,qPos);
   curQ={hd,st:qSt,p:qPos,inRange:qAct!=='fold',sit:qSit};
   let ctx='';
