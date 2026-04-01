@@ -1135,6 +1135,9 @@ function loadBuild(st,p){
   document.getElementById('b-leg').style.display='none';
   buildGrid('bg',null,null,null);
   document.getElementById('b-cnt').textContent='0';
+
+  
+  
 }
 function clearBuild(){
   bSel=new Set();bCallSet=new Set();bRaiseSet=new Set();bAllinSet=new Set();
@@ -1157,10 +1160,24 @@ function checkBuild(){
       else{c.classList.add('fn');stats.call.missing++;}
       return;
     }
-    if(inTgtCall){if(myCall){c.classList.add('ci-call');stats.call.correct++;}else if(myRaise||myAllin){c.classList.add('fw');stats.call.wrongColor++;}else{c.classList.add('fn');stats.call.missing++;}}
-    else if(inTgtRaise){if(myRaise){c.classList.add('ci-raise');stats.raise.correct++;}else if(myCall||myAllin){c.classList.add('fw');stats.raise.wrongColor++;}else{c.classList.add('fn');stats.raise.missing++;}}
-    else if(inTgtAllin){if(myAllin){c.classList.add('ci-allin');stats.allin.correct++;}else if(myCall||myRaise){c.classList.add('fw');stats.allin.wrongColor++;}else{c.classList.add('fn');stats.allin.missing++;}}
-    else{if(inSel){c.classList.add('fp');stats.fold.extra++;}else c.classList.add('co');}
+
+      if(inTgtCall){
+  if(myCall){c.classList.add('ci-call');stats.call.correct++;}
+  else if(myRaise||myAllin){c.classList.add('fw');stats.call.wrongColor++;}
+  else{c.classList.add('fn');stats.call.missing++;}
+}
+else if(inTgtRaise){
+  if(myRaise){c.classList.add('ci-raise');stats.raise.correct++;}
+  else if(myCall||myAllin){c.classList.add('fw');stats.raise.wrongColor++;}
+  else{c.classList.add('fn');stats.raise.missing++;}
+}
+else if(inTgtAllin){
+  if(myAllin){c.classList.add('ci-allin');stats.allin.correct++;}
+  else if(myCall||myRaise){c.classList.add('fw');stats.allin.wrongColor++;}
+  else{c.classList.add('fn');stats.allin.missing++;}
+}
+else{if(inSel){c.classList.add('fp');stats.fold.extra++;}else c.classList.add('co');}
+    
   });
   const totalTgt=tgtAll.size;const totalCorrect=stats.call.correct+stats.raise.correct+stats.allin.correct;
   const totalWrong=stats.call.wrongColor+stats.raise.wrongColor+stats.allin.wrongColor;
