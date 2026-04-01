@@ -1136,10 +1136,18 @@ function loadBuild(st,p){
   let tgtCall=new Set(),tgtRaise=new Set(),tgtAllin=new Set();
   if(custom){tgtCall=new Set(custom.callRange||[]);tgtRaise=new Set(custom.raiseRange2||[]);tgtAllin=new Set(custom.allinRange||[]);}
   else if(sit==='open'){
-    if(isOpenAllin(st,sit))tgtAllin=getRange(sit,st,p)||new Set();
-    else if(isOpenMixed(st,sit)){tgtCall=new Set(OP_RAISE[st]?.[p]||[]);tgtAllin=new Set(OP_SHOVE[st]?.[p]||[]);}
-    else tgtCall=getRange(sit,st,p)||new Set();
-  } else if(sit==='3bet'){
+  if(custom){
+    // Si hay custom guardado, valida contra ESE
+    tgtCall=new Set(custom.callRange||[]);
+    tgtRaise=new Set(custom.raiseRange2||[]);
+    tgtAllin=new Set(custom.allinRange||[]);
+  } else {
+    // Si NO hay custom, valida contra el rango default del software
+    const fullRange = getRange(sit, st, p) || new Set();
+    tgtCall = new Set(fullRange);
+    // tgtRaise y tgtAllin quedan vacíos
+  }
+} else if(sit==='3bet'){
   tgtRaise=getRange(sit,st,p)||new Set();
   const posOpener = p.split('_')[1];
   tgtCall = CL[posOpener]?.[st] || new Set();
