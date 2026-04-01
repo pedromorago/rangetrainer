@@ -1148,9 +1148,16 @@ function loadBuild(st,p){
     // tgtRaise y tgtAllin quedan vacíos
   }
 } else if(sit==='3bet'){
-  tgtRaise=getRange(sit,st,p)||new Set();
-  const posOpener = p.split('_')[1];
-  tgtCall = CL[posOpener]?.[st] || new Set();
+  if(custom){
+    tgtCall=new Set(custom.callRange||[]);
+    tgtRaise=new Set(custom.raiseRange2||[]);
+    tgtAllin=new Set(custom.allinRange||[]);
+  } else {
+    const fullRange = getRange(sit, st, p) || new Set();
+    tgtCall = new Set(fullRange);
+    tgtRaise = new Set();
+    tgtAllin = new Set();
+  }
 }
   const tgtAll=new Set([...tgtCall,...tgtRaise,...tgtAllin]);
   bTarget={sit,st,p,range:tgtAll,tgtCall,tgtRaise,tgtAllin};
