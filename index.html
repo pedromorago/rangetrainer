@@ -1138,7 +1138,7 @@ function loadBuild(st,p){
   else if(sit==='open'){
     if(isOpenAllin(st,sit))tgtAllin=getRange(sit,st,p)||new Set();
     else if(isOpenMixed(st,sit)){tgtCall=new Set(OP_RAISE[st]?.[p]||[]);tgtAllin=new Set(OP_SHOVE[st]?.[p]||[]);}
-    else tgtRaise=getRange(sit,st,p)||new Set();
+    else tgtCall=getRange(sit,st,p)||new Set();
   } else if(sit==='3bet'){
   tgtRaise=getRange(sit,st,p)||new Set();
   const posOpener = p.split('_')[1];
